@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using OutlineText;
 
-namespace FlyingCommentWithYoutbe
+namespace FlyingComment
 {
     /// <summary>
     /// FlyingCommentsWindow.xaml の相互作用ロジック

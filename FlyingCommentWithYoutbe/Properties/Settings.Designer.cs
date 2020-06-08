@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FlyingCommentWithYoutbe.Properties {
+namespace FlyingComment.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -157,7 +157,7 @@ namespace FlyingCommentWithYoutbe.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0,0,300,300")]
+        [global::System.Configuration.DefaultSettingValueAttribute("500,0,300,300")]
         public global::System.Windows.Rect CommentWndRect {
             get {
                 return ((global::System.Windows.Rect)(this["CommentWndRect"]));
@@ -169,7 +169,7 @@ namespace FlyingCommentWithYoutbe.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0,0,600,600")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0,0,500,700")]
         public global::System.Windows.Rect SettingWndRect {
             get {
                 return ((global::System.Windows.Rect)(this["SettingWndRect"]));

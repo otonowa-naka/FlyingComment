@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FlyingCommentWithYoutbe.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FlyingComment.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="FontName" Type="System.String" Scope="User">
@@ -36,10 +36,10 @@
       <Value Profile="(Default)">1gLu-N7N07c</Value>
     </Setting>
     <Setting Name="CommentWndRect" Type="System.Windows.Rect" Scope="User">
-      <Value Profile="(Default)">0,0,300,300</Value>
+      <Value Profile="(Default)">500,0,300,300</Value>
     </Setting>
     <Setting Name="SettingWndRect" Type="System.Windows.Rect" Scope="User">
-      <Value Profile="(Default)">0,0,600,600</Value>
+      <Value Profile="(Default)">0,0,500,700</Value>
     </Setting>
     <Setting Name="BackColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">Black</Value>

@@ -6,7 +6,7 @@ using System.Windows.Markup;
 using System.Linq;
 using System.Globalization;
 
-namespace FlyingCommentWithYoutbe
+namespace FlyingComment
 {
 
     /// <summary>

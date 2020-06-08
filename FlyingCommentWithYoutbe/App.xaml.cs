@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace FlyingCommentWithYoutbe
+namespace FlyingComment
 {
     /// <summary>
     /// App.xaml の相互作用ロジック
