@@ -12,7 +12,7 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -55,16 +55,16 @@
         <TextBlock  Grid.Column="0" Grid.Row="3"  Text="イタリック"  VerticalAlignment="Center" ></TextBlock>
         <CheckBox x:Name="m_ItalicBox" Grid.Column="1" Grid.Row="3" Margin="10" VerticalAlignment="Center" IsChecked="{Binding FontItalic}"></CheckBox>
 
-        <TextBlock  Grid.Column="0" Grid.Row="4"  Text="フォント縁太さ"  VerticalAlignment="Center" ></TextBlock>
+        <TextBlock  Grid.Column="0" Grid.Row="4"  Text="文字縁太さ"  VerticalAlignment="Center" ></TextBlock>
         <TextBox x:Name="m_FontThicknessSize" Grid.Column="1" Grid.Row="4" Margin="10" TextWrapping="Wrap" Text="{Binding Path=FontThickness}"/>
 
-        <TextBlock  Grid.Column="0" Grid.Row="5"  Text="フォント縁色"  VerticalAlignment="Center" ></TextBlock>
+        <TextBlock  Grid.Column="0" Grid.Row="5"  Text="文字縁色"  VerticalAlignment="Center" ></TextBlock>
         <TextBox x:Name="m_FontThicknessColor" Grid.Column="1" Grid.Row="5" Margin="10" TextWrapping="Wrap" Text="{Binding Path=FontThicknessColor,UpdateSourceTrigger=PropertyChanged}" />
 
         <TextBlock  Grid.Column="0" Grid.Row="6"  Text="文字塗りつぶし色"  VerticalAlignment="Center" ></TextBlock>
         <TextBox x:Name="m_FontColor" Grid.Column="1" Grid.Row="6" Margin="10" TextWrapping="Wrap" Text="{Binding Path=FontColor}" />
 
-        <TextBlock  Grid.Column="0" Grid.Row="7"  Text="フォント滞在時間(ミリ秒)"  VerticalAlignment="Center" ></TextBlock>
+        <TextBlock  Grid.Column="0" Grid.Row="7"  Text="コメント滞在時間(ミリ秒)"  VerticalAlignment="Center" ></TextBlock>
         <TextBox x:Name="m_CommentTime" Grid.Column="1" Grid.Row="7" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentTime}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="8"  Text="Window 背景色"  VerticalAlignment="Center" ></TextBlock>
@@ -77,14 +77,14 @@
         <TextBlock  Grid.Column="0" Grid.Row="10"  Text="Windowを透明にする"  VerticalAlignment="Center" ></TextBlock>
         <CheckBox x:Name="m_TopmosthButton" Grid.Column="1" Grid.Row="10"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=Stealth}"  />
         
-        <TextBlock  Grid.Column="0" Grid.Row="11"  Text="テキストを表示する"  VerticalAlignment="Center" ></TextBlock>
+        <TextBlock  Grid.Column="0" Grid.Row="11"  Text="コメントを表示する"  VerticalAlignment="Center" ></TextBlock>
         <CheckBox x:Name="m_WindowHideButton" Grid.Column="1" Grid.Row="11"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=Visible}" />
 
 
-        <TextBlock  Grid.Column="0" Grid.Row="12"  Text="テスト文字列"  VerticalAlignment="Center" ></TextBlock>
+        <TextBlock  Grid.Column="0" Grid.Row="12"  Text="テストコメント文字列"  VerticalAlignment="Center" ></TextBlock>
         <TextBox x:Name="m_TestComment" Grid.Column="1" Grid.Row="12" Margin="10" TextWrapping="Wrap" Text="テストコメント"/>
 
-        <TextBlock  Grid.Column="0" Grid.Row="13"  Text="テスト送信"  VerticalAlignment="Center" ></TextBlock>
+        <TextBlock  Grid.Column="0" Grid.Row="13"  Text="テストコメント表示"  VerticalAlignment="Center" ></TextBlock>
         <Button x:Name="m_TestSendButton" Grid.Column="1" Grid.Row="13"  Margin="10" Content="テストコメント表示" Click="m_TestSendButton_Click" />
 
         <TextBlock  Grid.Column="0" Grid.Row="14"  Text="Google API Key"  VerticalAlignment="Center"></TextBlock>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FlyingComment"
         mc:Ignorable="d"
         x:Name="m_FlyingCommentWnd"
-        Title="コメントが表示される位置に移動して非表示してください。" 
+        Title="コメント表示" 
         WindowStyle="None"
         Topmost="{Binding Path=Topmost}" 
         Closing="Window_Closing" 

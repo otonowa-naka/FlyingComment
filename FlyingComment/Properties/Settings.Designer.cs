@@ -181,7 +181,7 @@ namespace FlyingComment.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#00FF00")]
         public string BackColor {
             get {
                 return ((string)(this["BackColor"]));
