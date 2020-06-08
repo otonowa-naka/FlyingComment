@@ -1,0 +1,51 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FlyingCommentWithYoutbe.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FontName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Meiryo</Value>
+    </Setting>
+    <Setting Name="FontSize" Type="System.String" Scope="User">
+      <Value Profile="(Default)">48</Value>
+    </Setting>
+    <Setting Name="FontItalic" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FontBald" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FontColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#FFFFFF</Value>
+    </Setting>
+    <Setting Name="FontThicknessColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="FontThickness" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="CommentTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">4000</Value>
+    </Setting>
+    <Setting Name="CommentWinState" Type="System.Windows.WindowState" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="APIKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AIzaSyBnScGlhDjBtIPAtTZ1XjxhKocaDyJgQUw</Value>
+    </Setting>
+    <Setting Name="VideoID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1gLu-N7N07c</Value>
+    </Setting>
+    <Setting Name="CommentWndRect" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,300,300</Value>
+    </Setting>
+    <Setting Name="SettingWndRect" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,600,600</Value>
+    </Setting>
+    <Setting Name="BackColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="Topmost" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
