@@ -145,7 +145,7 @@ namespace FlyingComment.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1gLu-N7N07c")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1gLu-N7Naaa")]
         public string VideoID {
             get {
                 return ((string)(this["VideoID"]));

@@ -33,7 +33,7 @@
       <Value Profile="(Default)">AIzaSyBnScGlhDjBtIPAtTZ1XjxhKocaDyJgQUw</Value>
     </Setting>
     <Setting Name="VideoID" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1gLu-N7N07c</Value>
+      <Value Profile="(Default)">1gLu-N7Naaa</Value>
     </Setting>
     <Setting Name="CommentWndRect" Type="System.Windows.Rect" Scope="User">
       <Value Profile="(Default)">500,0,300,300</Value>
