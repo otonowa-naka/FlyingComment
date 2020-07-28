@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace FlyingComment.Model
@@ -14,10 +15,13 @@ namespace FlyingComment.Model
     {
 
 
-        public override bool IsError()
+        public bool IsError()
         {
             bool ret = true;
-            if(FamilyValidation() == null)
+            if (
+                (FamilyStringErrorMessage == null)
+                &&  (SizeStringErrorMessage == null)
+                )
             {
                 ret = false;
             }
@@ -28,7 +32,7 @@ namespace FlyingComment.Model
         /// <summary>
         /// フォント名
         /// </summary>
-        private string _FamilyString = "";
+        private string _FamilyString = "Meiryo";
         public string FamilyString {
             get
             {
@@ -44,7 +48,7 @@ namespace FlyingComment.Model
         {
             get
             {
-                return ( new FontFamily(_FamilyString) );
+                return (new FontFamily(_FamilyString));
             }
         }
 
@@ -53,40 +57,44 @@ namespace FlyingComment.Model
         /// </summary>
         /// <param name="val">フォントファミリー文字列</param>
         /// <returns>正常　＝　null</returns>
-        public string FamilyValidation()
+        public string FamilyStringErrorMessage
         {
-            string ret = null;
-            try
+            get
             {
-                if (string.IsNullOrWhiteSpace(FamilyString) == false)
+                string ret = null;
+                try
                 {
-                    FontFamily fam = new FontFamily(FamilyString);
-                    if (fam != null)
+                    if (string.IsNullOrWhiteSpace(FamilyString) == false)
                     {
-                       // 正常
+                        FontFamily fam = new FontFamily(FamilyString);
+                        if (fam != null)
+                        {
+                            // 正常
+                        }
+                        else
+                        {
+                            ret = "フォントファミリーが変換できませんでした。";
+                        }
                     }
                     else
                     {
-                        ret =  "フォントファミリーが変換できませんでした。";
+                        ret = "フォントファミリー名が空白です。";
                     }
                 }
-                else
+                catch (Exception)
                 {
-                    ret =  "フォントファミリー名が空白です。";
+                    ret = "例外が発生しました。";
                 }
-            }
-            catch (Exception)
-            {
-                ret =  "例外が発生しました。";
-            }
 
-            return ret;
+                return ret;
+
+            }
         }
 
         /// <summary>
         /// フォントサイズ
         /// </summary>
-        private string _SzierString = "";
+        private string _SzierString = "48";
         public string SizeString
         {
             get
@@ -95,15 +103,60 @@ namespace FlyingComment.Model
             }
             set
             {
-                _SzierString = value;
+                SetProperty(ref _SzierString, value);
             }
         }
 
+        public Double Size
+        {
+            get
+            {
+                Double ret = 0;
+                try
+                {
+                    FontSizeConverter myFontSizeConverter = new FontSizeConverter();
+                    ret =  (Double)myFontSizeConverter.ConvertFromString(_SzierString);
 
-        /// <summary>
-        /// フォントイタリックフラグ
-        /// </summary>
-        private bool _Italic = false;
+                }catch(Exception /*ex*/)
+                {
+                    ret = 0;
+                }
+                return ret;
+            }
+        }
+  
+
+        public string SizeStringErrorMessage
+        {
+            get
+            {
+                string ret = null;
+                //　フォントサイズ設定
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(_SzierString) == false)
+                    {
+                        FontSizeConverter myFontSizeConverter = new FontSizeConverter();
+                        var FontSize = (Double)myFontSizeConverter.ConvertFromString(_SzierString);
+                    }
+                    else
+                    {
+                        ret = "フォントサイズが空白です。";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ret = $"フォントサイズ変換に失敗{ ex.Message}";
+                }
+
+                return ret;
+            }
+        }
+
+/// <summary>
+/// フォントイタリックフラグ
+/// </summary>
+private bool _Italic = false;
         public bool ItalicString
         {
             get

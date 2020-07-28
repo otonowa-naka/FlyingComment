@@ -11,7 +11,6 @@ namespace FlyingComment.Model
     public class NotifyChangedBase
     {
         public event EventHandler<PropertyChangedEventArgs> _m_notifyPropertyChanged = null;
-        public event EventHandler<PropertyChangedEventArgs> _m_notifyError = null;
 
         /// <summary>
         /// プロパティが既に目的の値と一致しているかどうかを確認します。必要な場合のみ、
@@ -29,14 +28,7 @@ namespace FlyingComment.Model
         {
             if (object.Equals(storage, value)) return false;
 
-            bool err = IsError();
-
             storage = value;
-
-            if (err != IsError())
-            {
-                OnErrorChanged(propertyName);
-            }
 
             this.OnPropertyChanged(propertyName);
             return true;
@@ -53,23 +45,7 @@ namespace FlyingComment.Model
             _m_notifyPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         }
-        /// <summary>
-        /// プロパティ値が変更されたことをリスナーに通知します。
-        /// </summary>
-        /// <param name="propertyName">リスナーに通知するために使用するプロパティの名前。
-        /// この値は省略可能で、
-        /// <see cref="CallerMemberNameAttribute"/> をサポートするコンパイラから呼び出す場合に自動的に指定できます。</param>
-        protected void OnErrorChanged([CallerMemberName] string propertyName = null)
-        {
-            _m_notifyError?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        }
-
-
-        public virtual bool IsError()
-        {
-            return true;
-        }
 
     }
 }

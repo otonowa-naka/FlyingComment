@@ -28,7 +28,7 @@ namespace FlyingComment
 
             if (propertyName == nameof(FamilyString))
             {
-                errmsg = _FontSetting.FamilyValidation();
+                errmsg = _FontSetting.FamilyStringErrorMessage;
 
             }
 
@@ -77,17 +77,6 @@ namespace FlyingComment
             try
             {
 
-                _FontSetting._m_notifyError += (SendOrPostCallback, arg) =>
-                {
-                    PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
-                    if(proarg == null)
-                    {
-                        throw new ArgumentException("proarg is null");
-                    }
-
-                    ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(proarg.PropertyName));
-                };
-
                 _FontSetting._m_notifyPropertyChanged += (SendOrPostCallback, arg) =>
                 {
                     PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
@@ -97,6 +86,7 @@ namespace FlyingComment
                     }
 
                     PropertyChanged?.Invoke(this, proarg);
+                    ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(proarg.PropertyName));
                 };
 
 
