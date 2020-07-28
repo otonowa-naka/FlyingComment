@@ -104,6 +104,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="AppModel.cs" />
+    <Compile Include="Model\Base\ErrorMessageContainer.cs" />
+    <Compile Include="Model\FontSettingEntity.cs" />
+    <Compile Include="Model\Base\NotifyChangedBase.cs" />
+    <Compile Include="Model\Base\PropertyChangedEventArgs.cs" />
     <Compile Include="OutlineTextControl.cs" />
     <Page Include="FlyingCommentsWindow.xaml">
       <SubType>Designer</SubType>

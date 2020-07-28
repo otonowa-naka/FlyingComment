@@ -1,4 +1,5 @@
-﻿using Google.Apis.Services;
+﻿using FlyingComment.Model;
+using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,63 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Collections;
 
 namespace FlyingComment
 {
 
 
-    public class AppModel : INotifyPropertyChanged, IDisposable
+    public class AppModel : INotifyPropertyChanged, IDisposable, INotifyDataErrorInfo
     {
+        private FontSettingEntity _FontSetting = new FontSettingEntity();
+
+
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            IEnumerable ret = null;
+            string errmsg = null;
+
+            if (propertyName == nameof(FamilyString))
+            {
+                errmsg = _FontSetting.FamilyValidation();
+
+            }
+
+            if (errmsg != null)
+            {
+                ret = new List<string> { errmsg };
+            }
+
+
+
+            return ret;
+        }
+
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+
+        public bool HasErrors
+        {
+            get
+            {
+                return _FontSetting.IsError();
+            }
+        }
+
+        public string FamilyString
+        {
+            get
+            {
+                return _FontSetting.FamilyString;
+            }
+            set
+            {
+                _FontSetting.FamilyString = value;
+
+            }
+        }
 
         /// <summary>
         /// コンストラクタ
@@ -25,6 +76,31 @@ namespace FlyingComment
             // APP設定でデータの初期化
             try
             {
+
+                _FontSetting._m_notifyError += (SendOrPostCallback, arg) =>
+                {
+                    PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
+                    if(proarg == null)
+                    {
+                        throw new ArgumentException("proarg is null");
+                    }
+
+                    ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(proarg.PropertyName));
+                };
+
+                _FontSetting._m_notifyPropertyChanged += (SendOrPostCallback, arg) =>
+                {
+                    PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
+                    if (proarg == null)
+                    {
+                        throw new ArgumentException("proarg is null");
+                    }
+
+                    PropertyChanged?.Invoke(this, proarg);
+                };
+
+
+
                 FontName = Properties.Settings.Default.FontName;
                 FontSize = Properties.Settings.Default.FontSize;
                 FontItalic = Properties.Settings.Default.FontItalic;
@@ -49,6 +125,8 @@ namespace FlyingComment
 
             }
         }
+
+
 
         /// <summary>
         /// デストラクタ
@@ -460,6 +538,8 @@ namespace FlyingComment
                 return ret;
             }
         }
+
+
         #endregion
 
         /// <summary>
@@ -648,9 +728,9 @@ namespace FlyingComment
                         nextPageToken = liveChatResponse.NextPageToken;
                     }
                 }
-            }catch(OperationCanceledException ex)
+            }catch(OperationCanceledException /*ex*/)
             {
-                _logger.Info($"Youtubes監視スレッドで終了要求検知");
+                _logger.Info($"Youtubes監視スレッドで終了要求検知 {0} ");
 
             }
             catch (Exception ex)
@@ -685,7 +765,6 @@ namespace FlyingComment
             //動画情報取得できない場合はnullを返す
             return ret;
         }
-
 
     }
 }
