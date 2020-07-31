@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Collections;
+using FlyingComment.Repository;
 
 namespace FlyingComment
 {
@@ -29,7 +30,25 @@ namespace FlyingComment
             if (propertyName == nameof(FamilyString))
             {
                 errmsg = _FontSetting.FamilyStringErrorMessage;
-
+            }else
+            if (propertyName == nameof(SizeString))
+            {
+                errmsg = _FontSetting.SizeStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(ColorString))
+            {
+                errmsg = _FontSetting.ColorStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(ThicknessColorString))
+            {
+                errmsg = _FontSetting.ThicknessColorStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(ThicknessString))
+            {
+                errmsg = _FontSetting.ThicknessStringErrorMessage;
             }
 
             if (errmsg != null)
@@ -54,18 +73,7 @@ namespace FlyingComment
             }
         }
 
-        public string FamilyString
-        {
-            get
-            {
-                return _FontSetting.FamilyString;
-            }
-            set
-            {
-                _FontSetting.FamilyString = value;
 
-            }
-        }
 
         /// <summary>
         /// コンストラクタ
@@ -76,8 +84,8 @@ namespace FlyingComment
             // APP設定でデータの初期化
             try
             {
-
-                _FontSetting._m_notifyPropertyChanged += (SendOrPostCallback, arg) =>
+                _FontSetting = PropertyXMLRepository.LoadFontSettingEntity();
+                _FontSetting.PropertyChanged += (SendOrPostCallback, arg) =>
                 {
                     PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
                     if (proarg == null)
@@ -91,13 +99,6 @@ namespace FlyingComment
 
 
 
-                FontName = Properties.Settings.Default.FontName;
-                FontSize = Properties.Settings.Default.FontSize;
-                FontItalic = Properties.Settings.Default.FontItalic;
-                FontBald = Properties.Settings.Default.FontBald;
-                FontColor = Properties.Settings.Default.FontColor;
-                FontThicknessColor = Properties.Settings.Default.FontThicknessColor;
-                FontThickness = Properties.Settings.Default.FontThickness;
                 CommentTime = Properties.Settings.Default.CommentTime;
                 YouTubeAPIKey = Properties.Settings.Default.APIKey;
                 YouTubeVideoID = Properties.Settings.Default.VideoID;
@@ -140,6 +141,118 @@ namespace FlyingComment
             }
 
         }
+
+
+        /// <summary>
+        /// フォント名
+        /// </summary>
+        public string FamilyString
+        {
+            get
+            {
+                return _FontSetting.FamilyString;
+            }
+            set
+            {
+                _FontSetting.FamilyString = value;
+
+            }
+        }
+
+
+        /// <summary>
+        /// フォントサイズ
+        /// </summary>
+        public string SizeString
+        {
+            get
+            {
+                return _FontSetting.SizeString;
+            }
+            set
+            {
+                _FontSetting.SizeString = value;
+
+            }
+        }
+
+
+        /// <summary>
+        /// フォントイタリックフラグ
+        /// </summary>
+        public bool Italic
+        {
+            get
+            {
+                return _FontSetting.Italic;
+            }
+            set
+            {
+                _FontSetting.Italic = value;
+
+            }
+        }
+
+        /// <summary>
+        /// フォントボールド設定
+        /// </summary>
+        public bool Bald
+        {
+            get
+            {
+                return _FontSetting.Bald;
+            }
+            set
+            {
+                _FontSetting.Bald = value;
+            }
+        }
+
+        /// <summary>
+        /// 文字の色
+        /// </summary>
+        public string ColorString
+        {
+            get
+            {
+                return _FontSetting.ColorString;
+            }
+            set
+            {
+                _FontSetting.ColorString = value;
+            }
+        }
+
+        /// <summary>
+        /// 文字の縁の色
+        /// </summary>
+        public string ThicknessColorString
+        {
+            get
+            {
+                return _FontSetting.ThicknessColorString;
+            }
+            set
+            {
+                _FontSetting.ThicknessColorString = value;
+            }
+        }
+
+        /// <summary>
+        /// 文字の縁のピクセル数
+        /// </summary>
+        public string ThicknessString
+        {
+            get
+            {
+                return _FontSetting.ThicknessString;
+            }
+            set
+            {
+                _FontSetting.ThicknessString = value;
+            }
+        }
+
 
 
         /// <summary>
@@ -292,117 +405,7 @@ namespace FlyingComment
             }
         }
 
-        /// <summary>
-        /// フォント名
-        /// </summary>
-        private string _FontName = "";
-        public string FontName {
-            get
-            {
-                return _FontName;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _FontName, value);
-            }
-        }
 
-        /// <summary>
-        /// フォントサイズ
-        /// </summary>
-        private string _FontSzie = "";
-        public string FontSize
-        {
-            get
-            {
-                return _FontSzie;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _FontSzie, value);
-            }
-        }
-
-
-        /// <summary>
-        /// フォントイタリックフラグ
-        /// </summary>
-        private bool _FontItalic = false;
-        public bool FontItalic
-        {
-            get
-            {
-                return _FontItalic;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _FontItalic, value);
-            }
-        }
-
-        /// <summary>
-        /// フォントボールド設定
-        /// </summary>
-        private bool _FontBald;
-        public bool FontBald
-        {
-            get
-            {
-                return _FontBald;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _FontBald, value);
-            }
-        }
-
-        /// <summary>
-        /// 文字の色
-        /// </summary>
-        private string _FontColor;
-        public string FontColor
-        {
-            get
-            {
-                return _FontColor;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _FontColor, value);
-            }
-        }
-
-        /// <summary>
-        /// 文字の縁の色
-        /// </summary>
-        private string _FontThicknessColor;
-        public string FontThicknessColor
-        {
-            get
-            {
-                return _FontThicknessColor;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _FontThicknessColor, value);
-            }
-        }
-
-        /// <summary>
-        /// 文字の縁のピクセル数
-        /// </summary>
-        private string _FontThickness;
-        public string FontThickness
-        {
-            get
-            {
-                return _FontThickness;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _FontThickness, value);
-            }
-        }
 
         /// <summary>
         /// コメントの画面滞在時間
@@ -563,13 +566,9 @@ namespace FlyingComment
             // APP設定でデータの初期化
             try
             {
-                Properties.Settings.Default.FontName = FontName;
-                Properties.Settings.Default.FontSize = FontSize;
-                Properties.Settings.Default.FontItalic = FontItalic;
-                Properties.Settings.Default.FontBald = FontBald;
-                Properties.Settings.Default.FontColor = FontColor;
-                Properties.Settings.Default.FontThicknessColor = FontThicknessColor;
-                Properties.Settings.Default.FontThickness = FontThickness;
+                PropertyXMLRepository.SaveFontSettingEntity(_FontSetting);
+
+
                 Properties.Settings.Default.CommentTime = CommentTime;
                 Properties.Settings.Default.APIKey = YouTubeAPIKey;
                 Properties.Settings.Default.VideoID = YouTubeVideoID;

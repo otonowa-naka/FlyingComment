@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Windows.Media;
 
 namespace FlyingComment.Model.Tests
 {
@@ -21,10 +22,10 @@ namespace FlyingComment.Model.Tests
 
 
             bool ChangeEvent = false;
-            
+
             //正常系
             {
-                fontset._m_notifyPropertyChanged += (send, arg) =>
+                fontset.PropertyChanged += (send, arg) =>
                 {
                     PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
                     Assert.AreEqual("FamilyString", proarg.PropertyName);
@@ -101,7 +102,7 @@ namespace FlyingComment.Model.Tests
 
             //正常系
             {
-                fontset._m_notifyPropertyChanged += (send, arg) =>
+                fontset.PropertyChanged += (send, arg) =>
                 {
                     PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
                     Assert.AreEqual("SizeString", proarg.PropertyName);
@@ -190,5 +191,146 @@ namespace FlyingComment.Model.Tests
             fontset.SizeString = "22a22";
             Assert.AreEqual(true, fontset.IsError());
         }
+
+        [TestMethod()]
+        public void ColorStringStringTest()
+        {
+            // 初期値はエラー
+            FontSettingEntity fontset = new FontSettingEntity();
+
+
+            bool ChangeEvent = false;
+
+            //正常系
+            {
+                fontset.PropertyChanged += (send, arg) =>
+                {
+                    PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
+                    Assert.AreEqual("ColorString", proarg.PropertyName);
+                    ChangeEvent = true;
+                };
+
+                fontset.ColorString = "#FFFFFFFF";
+                Assert.AreEqual("#FFFFFFFF", fontset.ColorString);
+                Assert.AreEqual(Colors.White, fontset.Color);
+                Assert.AreEqual(false, fontset.IsError());
+                Assert.IsTrue(ChangeEvent);
+
+                // 正常から正常へ
+                // イベント状態のリセット
+                ChangeEvent = false;
+                fontset.ColorString = "red";
+                Assert.AreEqual("red", fontset.ColorString);
+                Assert.AreEqual(Colors.Red, fontset.Color);
+                Assert.AreEqual(false, fontset.IsError());
+                Assert.IsTrue(ChangeEvent);
+
+
+                // 値の変更なし
+                // イベント状態のリセット
+                ChangeEvent = false;
+                fontset.ColorString = "red";
+                Assert.AreEqual("red", fontset.ColorString);
+                Assert.AreEqual(Colors.Red, fontset.Color);
+                Assert.AreEqual(false, fontset.IsError());
+                Assert.IsFalse(ChangeEvent);
+
+            }
+
+            //　正常から異常イベントの確認
+            {
+                // イベント状態のリセット
+                ChangeEvent = false;
+
+                fontset.ColorString = null;
+                Assert.AreEqual(null, fontset.ColorString);
+                Assert.AreEqual(new Color(), fontset.Color);
+
+                Assert.AreEqual(true, fontset.IsError());
+                Assert.AreNotEqual(null, fontset.ColorStringErrorMessage);
+                Assert.IsTrue(ChangeEvent);
+
+                //異常から異常イベントの確認
+                ChangeEvent = false;
+
+                fontset.ColorString = "";
+                Assert.AreEqual("", fontset.ColorString);
+                Assert.AreEqual(new Color(), fontset.Color);
+                Assert.AreEqual(true, fontset.IsError());
+                Assert.AreNotEqual(null, fontset.ColorStringErrorMessage);
+                Assert.IsTrue(ChangeEvent);
+
+
+            }
+
+            //　値パターンの確認
+
+            fontset.ColorString = "Red";
+            Assert.AreEqual(Colors.Red, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+
+            fontset.ColorString = "RED";
+            Assert.AreEqual(Colors.Red, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+
+            fontset.ColorString = "#FF0000";
+            Assert.AreEqual(Colors.Red, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#00FF00";
+            Assert.AreEqual(Colors.Lime, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#0000FF";
+            Assert.AreEqual(Colors.Blue, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+
+            fontset.ColorString = "#F00";
+            Assert.AreEqual(Colors.Red, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#0F0";
+            Assert.AreEqual(Colors.Lime, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#00F";
+            Assert.AreEqual(Colors.Blue, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+
+            fontset.ColorString = "#FFFF0000";
+            Assert.AreEqual(Colors.Red, fontset.Color);
+            Assert.AreEqual(false, fontset.IsError());
+
+
+            fontset.ColorString = "#FFFFFFFFF";
+            Assert.AreEqual(true, fontset.IsError());
+            fontset.ColorString = "#FFFFFFFF";
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#FFFFFFF";
+            Assert.AreEqual(true, fontset.IsError());
+            fontset.ColorString = "#FFFFFF";
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#FFFFF";
+            Assert.AreEqual(true, fontset.IsError());
+            fontset.ColorString = "#FFFF";
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#FFF";
+            Assert.AreEqual(false, fontset.IsError());
+            fontset.ColorString = "#FF";
+            Assert.AreEqual(true, fontset.IsError());
+            fontset.ColorString = "#F";
+            Assert.AreEqual(true, fontset.IsError());
+
+
+
+            fontset.ColorString = "F";
+            Assert.AreEqual(true, fontset.IsError());
+
+            fontset.ColorString = "FFFFFF";
+            Assert.AreEqual(true, fontset.IsError());
+
+            fontset.ColorString = "オ";
+            Assert.AreEqual(true, fontset.IsError());
+
+            fontset.ColorString = "!";
+            Assert.AreEqual(true, fontset.IsError());
+        }
+
     }
 }

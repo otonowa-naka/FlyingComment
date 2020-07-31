@@ -99,6 +99,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repository\PropertyXMLRepository.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -107,7 +108,6 @@
     <Compile Include="Model\Base\ErrorMessageContainer.cs" />
     <Compile Include="Model\FontSettingEntity.cs" />
     <Compile Include="Model\Base\NotifyChangedBase.cs" />
-    <Compile Include="Model\Base\PropertyChangedEventArgs.cs" />
     <Compile Include="OutlineTextControl.cs" />
     <Page Include="FlyingCommentsWindow.xaml">
       <SubType>Designer</SubType>

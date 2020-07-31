@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace FlyingComment.Model
 {
-    public class NotifyChangedBase
+    public class NotifyChangedBase : INotifyPropertyChanged
     {
-        public event EventHandler<PropertyChangedEventArgs> _m_notifyPropertyChanged = null;
+        public event PropertyChangedEventHandler PropertyChanged = null;
 
         /// <summary>
         /// プロパティが既に目的の値と一致しているかどうかを確認します。必要な場合のみ、
@@ -42,7 +42,7 @@ namespace FlyingComment.Model
         /// <see cref="CallerMemberNameAttribute"/> をサポートするコンパイラから呼び出す場合に自動的に指定できます。</param>
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            _m_notifyPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         }
 

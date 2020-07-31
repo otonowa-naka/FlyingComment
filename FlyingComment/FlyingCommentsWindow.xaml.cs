@@ -213,17 +213,17 @@ namespace FlyingComment
                     // 表示文字設定
                     CommentBlock.Text = flytext;
                     // フォント設定
-                    CommentBlock.Font = new FontFamily(model.FontName); ;
+//                    CommentBlock.Font = new FontFamily(model.FontName); ;
                     // ボールド設定
-                    CommentBlock.Bold = model.FontBald;
+//                    CommentBlock.Bold = model.FontBald;
                     //　イタリック設定
-                    CommentBlock.Italic = model.FontItalic;
+//                    CommentBlock.Italic = model.FontItalic;
 
                     //　フォントサイズ設定
                     try
                     {
-                        FontSizeConverter myFontSizeConverter = new FontSizeConverter();
-                        CommentBlock.FontSize = (Double)myFontSizeConverter.ConvertFromString(model.FontSize);
+                        //FontSizeConverter myFontSizeConverter = new FontSizeConverter();
+                        //CommentBlock.FontSize = (Double)myFontSizeConverter.ConvertFromString(model.FontSize);
                     }
                     catch (Exception ex)
                     {
@@ -234,8 +234,8 @@ namespace FlyingComment
                     ColorConverter ColorConv = new ColorConverter();
                     try
                     {
-                        Color col = (Color)ColorConv.ConvertFrom(model.FontColor);
-                        CommentBlock.Fill = new SolidColorBrush(col);
+                    //    Color col = (Color)ColorConv.ConvertFrom(model.FontColor);
+                    //    CommentBlock.Fill = new SolidColorBrush(col);
                     }
                     catch (Exception ex)
                     {
@@ -245,8 +245,8 @@ namespace FlyingComment
                     // テキストの枠線の色
                     try
                     {
-                        Color col = (Color)ColorConv.ConvertFrom(model.FontThicknessColor);
-                        CommentBlock.Stroke = new SolidColorBrush(col);
+                        //Color col = (Color)ColorConv.ConvertFrom(model.FontThicknessColor);
+                        //CommentBlock.Stroke = new SolidColorBrush(col);
                     }
                     catch (Exception ex)
                     {
@@ -256,9 +256,9 @@ namespace FlyingComment
                     // テキストの枠の太さ
                     try
                     {
-                        ushort thic = 0;
-                        ushort.TryParse(model.FontThickness, out thic);
-                        CommentBlock.StrokeThickness = thic;
+                        //ushort thic = 0;
+                        //ushort.TryParse(model.FontThickness, out thic);
+                        //CommentBlock.StrokeThickness = thic;
                     }
                     catch (Exception ex)
                     {

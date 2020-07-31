@@ -15,12 +15,19 @@ namespace FlyingComment.Model
     {
 
 
+        /// <summary>
+        /// 保持データのバリテーションエラー
+        /// </summary>
+        /// <returns>ture = エラーあり　false = エラー無し</returns>
         public bool IsError()
         {
             bool ret = true;
             if (
                 (FamilyStringErrorMessage == null)
                 &&  (SizeStringErrorMessage == null)
+                && (ColorStringErrorMessage == null)
+                && (ThicknessColorStringErrorMessage == null)
+                && (ThicknessStringErrorMessage == null)
                 )
             {
                 ret = false;
@@ -44,6 +51,10 @@ namespace FlyingComment.Model
             }
         }
 
+
+        /// <summary>
+        /// フォルトファミリーオブジェクト
+        /// </summary>
         public FontFamily Family
         {
             get
@@ -146,18 +157,18 @@ namespace FlyingComment.Model
                 }
                 catch (Exception ex)
                 {
-                    ret = $"フォントサイズ変換に失敗{ ex.Message}";
+                    ret = $"フォントサイズ変換できません{ ex.Message}";
                 }
 
                 return ret;
             }
         }
 
-/// <summary>
-/// フォントイタリックフラグ
-/// </summary>
-private bool _Italic = false;
-        public bool ItalicString
+        /// <summary>
+        /// フォントイタリックフラグ
+        /// </summary>
+        private bool _Italic = false;
+        public bool Italic
         {
             get
             {
@@ -165,15 +176,16 @@ private bool _Italic = false;
             }
             set
             {
-                _Italic =  value;
+                SetProperty(ref _Italic, value);
+              
             }
         }
 
         /// <summary>
         /// フォントボールド設定
         /// </summary>
-        private bool _Bald;
-        public bool BaldString
+        private bool _Bald = false;
+        public bool Bald
         {
             get
             {
@@ -181,15 +193,15 @@ private bool _Italic = false;
             }
             set
             {
-                _Bald =  value;
+                SetProperty(ref _Bald, value);
             }
         }
 
         /// <summary>
         /// 文字の色
         /// </summary>
-        private string _ColorString;
-        public string ColorStringString
+        private string _ColorString = "#FFFFFF";
+        public string ColorString
         {
             get
             {
@@ -197,14 +209,63 @@ private bool _Italic = false;
             }
             set
             {
-                _ColorString =  value;
+                SetProperty(ref _ColorString, value);
             }
+        }
+
+        public Color Color
+        {
+            get
+            {
+                Color ret = new Color();
+                try
+                {
+                    ret = StringToColor(_ColorString);
+                }
+                catch (Exception /*ex*/)
+                {
+                }
+
+                return ret;
+            }
+        }
+
+        public string ColorStringErrorMessage
+        {
+            get
+            {
+                string ret = null;
+                //　フォントサイズ設定
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(_ColorString) == false)
+                    {
+                        StringToColor(_ColorString);
+                    }
+                    else
+                    {
+                        ret = "文字色が空白です。";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ret = $"文字色が変換できません。{ ex.Message}";
+                }
+
+                return ret;
+            }
+        }
+
+        private static Color StringToColor(string colorstr)
+        {
+            ColorConverter ColorConv = new ColorConverter();
+            return (Color)ColorConv.ConvertFrom(colorstr);
         }
 
         /// <summary>
         /// 文字の縁の色
         /// </summary>
-        private string _ThicknessColorrString;
+        private string _ThicknessColorrString = "#000000";
         public string ThicknessColorString
         {
             get
@@ -213,14 +274,59 @@ private bool _Italic = false;
             }
             set
             {
-                _ThicknessColorrString = value;
+                SetProperty(ref _ThicknessColorrString, value);
             }
         }
+
+
+        public Color ThicknessColor
+        {
+            get
+            {
+                Color ret = new Color();
+                try
+                {
+                    ret = StringToColor(_ThicknessColorrString);
+                }
+                catch (Exception /*ex*/)
+                {
+                }
+
+                return ret;
+            }
+        }
+
+        public string ThicknessColorStringErrorMessage
+        {
+            get
+            {
+                string ret = null;
+                //　フォントサイズ設定
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(_ThicknessColorrString) == false)
+                    {
+                        StringToColor(_ThicknessColorrString);
+                    }
+                    else
+                    {
+                        ret = "文字縁色がフォントサイズが空白です。";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ret = $"文字縁色が変換できません。{ ex.Message}";
+                }
+
+                return ret;
+            }
+        }
+
 
         /// <summary>
         /// 文字の縁のピクセル数
         /// </summary>
-        private string _ThicknessrString;
+        private string _ThicknessrString = "0";
         public string ThicknessString
         {
             get
@@ -229,8 +335,45 @@ private bool _Italic = false;
             }
             set
             {
-                _ThicknessrString =  value;
+                SetProperty(ref _ThicknessrString, value);
             }
         }
+
+        public ushort Thickness
+        {
+            get
+            {
+                ushort ret = 0;
+                ushort.TryParse(_ThicknessrString, out ret);
+                return ret;
+            }
+        }
+        public string ThicknessStringErrorMessage
+        {
+            get
+            {
+                string ret = null;
+                //　フォントサイズ設定
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(_ThicknessrString) == false)
+                    {
+                        ushort.Parse(_ThicknessrString);
+                    }
+                    else
+                    {
+                        ret = "フォントサイズが空白です。";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ret = $"フォントサイズ変換に失敗{ ex.Message}";
+                }
+
+                return ret;
+            }
+        }
+
+
     }
 }
