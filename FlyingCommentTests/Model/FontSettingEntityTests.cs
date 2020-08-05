@@ -13,82 +13,143 @@ namespace FlyingComment.Model.Tests
     [TestClass()]
     public class FontSettingEntityTests
     {
-        [TestMethod()]
-        public void FamilyStringTest()
+        FontSettingEntity FontSet;
+        string LastPropertyChangeName ;
+        bool ChangeEvent = false;
+
+        [TestInitialize]
+        public void setup()
         {
-            // 初期値はエラー
-            FontSettingEntity fontset = new FontSettingEntity();
-            Assert.AreEqual(false, fontset.IsError());
-
-
-            bool ChangeEvent = false;
-
-            //正常系
+            FontSet = new FontSettingEntity();
+            FontSet.PropertyChanged += (send, arg) =>
             {
-                fontset.PropertyChanged += (send, arg) =>
-                {
-                    PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
-                    Assert.AreEqual("FamilyString", proarg.PropertyName);
-                    ChangeEvent = true;
-                };
+                PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
+                LastPropertyChangeName = proarg.PropertyName;
+                ChangeEvent = true;
+            };
 
-                fontset.FamilyString = "MS ゴシック";
-                Assert.AreEqual(false, fontset.IsError());
-                Assert.IsTrue(ChangeEvent);
+            EventClear();
+        }
 
-                // 正常から正常へ
-                // イベント状態のリセット
-                ChangeEvent = false;
-                fontset.FamilyString = "メイリオ";
-                Assert.AreEqual(false, fontset.IsError());
-                Assert.IsTrue(ChangeEvent);
+        void EventClear()
+        {
+            LastPropertyChangeName = "";
+            ChangeEvent = false;
+
+        }
+
+        [TestMethod()]
+        public void コメント滞在時間にデータセットしたら値を変更して変更通知()
+        {
+            FontSet.CommentTimeString = "3000";
+
+            Assert.AreEqual("CommentTimeString", LastPropertyChangeName);
+            Assert.IsTrue(ChangeEvent);
+        }
+
+        [TestMethod]
+        public void コメント滞在時間に異常データがセットしたら値を変更して変更通知()
+        {
+            FontSet.CommentTimeString = "";
+            Assert.AreEqual("CommentTimeString", LastPropertyChangeName);
+            Assert.IsTrue(ChangeEvent);
+        }
+
+        [TestMethod]
+        public void コメント滞在時間の文字列をLongに変換()
+        {
+            FontSet.CommentTimeString = "9999";
+            Assert.AreEqual(9999, FontSet.CommentTime);
+        }
+
+        [TestMethod]
+        public void コメント滞在時間に異常値設定_小数点()
+        {
+            FontSet.CommentTimeString = "1.1";
+            Assert.AreEqual(true, FontSet.IsError());
+            Assert.AreNotEqual(null, FontSet.CommentTimeErrorMessage);
+        }
+
+        [TestMethod]
+        public void コメント滞在時間に異常値設定_数字以外()
+        {
+            FontSet.CommentTimeString = "1a1";
+            Assert.AreEqual(true, FontSet.IsError());
+            Assert.AreNotEqual(null, FontSet.CommentTimeErrorMessage);
+        }
 
 
-                // 値の変更なし
-                // イベント状態のリセット
-                ChangeEvent = false;
-                fontset.FamilyString = "メイリオ";
-                Assert.AreEqual(false, fontset.IsError());
-                Assert.IsFalse(ChangeEvent);
+        [TestMethod()]
+        public void フォントファミリーにデータがセットしたら値を変更して変更通知()
+        {
+            FontSet.FamilyString = "MS ゴシック";
+            Assert.AreEqual("FamilyString", LastPropertyChangeName);
+            Assert.IsTrue(ChangeEvent);
+        }
 
-            }
+        [TestMethod()]
+        public void フォントファミリーに異常データがセットしたら値を変更して変更通知()
+        {
+            FontSet.FamilyString = "";
+            Assert.AreEqual("FamilyString", LastPropertyChangeName);
+            Assert.IsTrue(ChangeEvent);
+        }
 
-            //　正常から異常イベントの確認
-            {
-                // イベント状態のリセット
-                ChangeEvent = false;
+        [TestMethod()]
+        public void フォントファミリーに同じデータがセットしたら値を変更して変更通知を出さない()
+        {
+            //同じ値を２回セットする
+            FontSet.FamilyString = "メイリオ";
 
-                fontset.FamilyString = null;
-                Assert.AreEqual(true, fontset.IsError());
-                Assert.IsTrue(ChangeEvent);
+            EventClear();
+            FontSet.FamilyString = "メイリオ";
+            Assert.IsFalse(ChangeEvent);
+        }
 
-                //異常から異常イベントの確認
-                ChangeEvent = false;
+        //　値パターンの確認
+        [TestMethod()]
+        public void フォントファミリーに異常値設定_空文字()
+        {
+            FontSet.FamilyString = "";
+            Assert.AreEqual(true, FontSet.IsError());
+            Assert.AreNotEqual(null, FontSet.FamilyStringErrorMessage);
 
-                fontset.FamilyString = "";
-                Assert.AreEqual(true, fontset.IsError());
-                Assert.IsTrue(ChangeEvent);
+        }
 
+        [TestMethod()]
+        public void フォントファミリーに異常値設定_NULL()
+        {
+            FontSet.FamilyString = null; 
+            Assert.AreEqual(true, FontSet.IsError());
+            Assert.AreNotEqual(null, FontSet.FamilyStringErrorMessage);
+        }
 
-            }
+        [TestMethod()]
+        public void フォントファミリーに正常値設定_メイリオ()
+        {
+            FontSet.FamilyString = "メイリオ";
+            Assert.AreEqual(false, FontSet.IsError());
+            Assert.AreEqual(null, FontSet.FamilyStringErrorMessage);
 
-            //　値パターンの確認
+        }
 
-            fontset.FamilyString = "";
-            Assert.AreEqual(true, fontset.IsError());
+        [TestMethod()]
+        public void フォントファミリーに正常値設定_英語()
+        {
+            FontSet.FamilyString = "Meiryo";
+            Assert.AreEqual(false, FontSet.IsError());
+            Assert.AreEqual(null, FontSet.FamilyStringErrorMessage);
 
-            fontset.FamilyString = "MS ゴシック";
-            Assert.AreEqual(false, fontset.IsError());
+        }
 
-            fontset.FamilyString = "メイリオ";
-            Assert.AreEqual(false, fontset.IsError());
-
-            fontset.FamilyString = "Meiryo";
-            Assert.AreEqual(false, fontset.IsError());
-
+        [TestMethod()]
+        public void フォントファミリーに異常値設定_適当()
+        {
+            FontSet.FamilyString = "適当";
             // システムで適当なフォントを割り当てるのでエラーにならない
-            fontset.FamilyString = "適当";
-            Assert.AreEqual(false, fontset.IsError());
+            Assert.AreEqual(false, FontSet.IsError());
+            Assert.AreEqual(null, FontSet.FamilyStringErrorMessage);
+
         }
 
         [TestMethod()]

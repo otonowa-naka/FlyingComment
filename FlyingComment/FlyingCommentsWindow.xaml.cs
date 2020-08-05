@@ -5,6 +5,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using OutlineText;
+using FlyingComment.ViewModel;
 
 namespace FlyingComment
 {
@@ -23,7 +24,7 @@ namespace FlyingComment
         /// コンストラクタ
         /// </summary>
         /// <param name="model"></param>
-        public FlyingCommentsWindow(AppModel model)
+        public FlyingCommentsWindow(MainWindowViewModel model)
         {
             InitializeComponent();
 
@@ -140,7 +141,7 @@ namespace FlyingComment
         private void RenewWindow()
         {
 
-            AppModel model = DataContext as AppModel;
+            MainWindowViewModel model = DataContext as MainWindowViewModel;
             if (model != null)
             {
                 //　現在の状態と透明化フラグの状態に差異があるか確認
@@ -159,7 +160,7 @@ namespace FlyingComment
                     // 透明化の状態と現在のWindowの状態が異なる時
 
                     //　新しいWindowを作成して、自身のModelを渡す。
-                    FlyingCommentsWindow newWind = new FlyingCommentsWindow(DataContext as AppModel);
+                    FlyingCommentsWindow newWind = new FlyingCommentsWindow(DataContext as MainWindowViewModel);
 
                     //　位置とサイズをコピー
                     newWind.Top = Top;
@@ -200,7 +201,7 @@ namespace FlyingComment
         /// </summary>
         private void FlyingComment()
         {
-            AppModel model = DataContext as AppModel;
+            MainWindowViewModel model = DataContext as MainWindowViewModel;
 
             if (model != null)
             {
@@ -398,7 +399,7 @@ namespace FlyingComment
             try
             {
 
-                AppModel model = DataContext as AppModel;
+                MainWindowViewModel model = DataContext as MainWindowViewModel;
 
                 //　モデルが設定されている場合
                 if(model != null)

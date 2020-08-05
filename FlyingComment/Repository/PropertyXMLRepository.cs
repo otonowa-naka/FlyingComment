@@ -19,6 +19,7 @@ namespace FlyingComment.Repository
             ret.ColorString = Properties.Settings.Default.FontColor;
             ret.ThicknessColorString = Properties.Settings.Default.FontThicknessColor;
             ret.ThicknessString = Properties.Settings.Default.FontThickness;
+            ret.CommentTimeString = Properties.Settings.Default.CommentTime;
 
             return ret;
         }
@@ -31,8 +32,8 @@ namespace FlyingComment.Repository
             Properties.Settings.Default.FontBald = entity.Bald;                 
             Properties.Settings.Default.FontColor = entity.ColorString;          
             Properties.Settings.Default.FontThicknessColor = entity.ThicknessColorString;
-            Properties.Settings.Default.FontThickness = entity.ThicknessString;  
-
+            Properties.Settings.Default.FontThickness = entity.ThicknessString;
+            Properties.Settings.Default.CommentTime = entity.CommentTimeString;
         }
     }
 }

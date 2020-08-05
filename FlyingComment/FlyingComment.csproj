@@ -99,12 +99,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ColorString.cs" />
+    <Compile Include="Model\CommentWindowsEntity.cs" />
     <Compile Include="Repository\PropertyXMLRepository.cs" />
+    <Compile Include="Service\FlyingWindowsService.cs" />
+    <Compile Include="Service\IWindowService.cs" />
+    <Compile Include="ViewModel\FlyingCommentsViewModel.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AppModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="Model\Base\ErrorMessageContainer.cs" />
     <Compile Include="Model\FontSettingEntity.cs" />
     <Compile Include="Model\Base\NotifyChangedBase.cs" />

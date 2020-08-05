@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlyingComment.ViewModel;
+using System;
 using System.Windows;
 
 namespace FlyingComment
@@ -15,7 +16,7 @@ namespace FlyingComment
 
 
       
-        public AppModel Model { get; set; } = new AppModel();
+        public MainWindowViewModel Model { get; set; } = new MainWindowViewModel();
   
 
         /// <summary>
@@ -40,5 +41,31 @@ namespace FlyingComment
             }
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static MainWindow FlyingCommentWindow = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CreateFlyingCommentWindow(object context)
+        {
+            if(FlyingCommentWindow != null)
+            {
+                CloseFlyingCommentWindow();
+            }
+            FlyingCommentWindow = new FlyingComment.MainWindow();
+            FlyingCommentWindow.DataContext = context;
+            FlyingCommentWindow.Show();
+        }
+
+        public void CloseFlyingCommentWindow()
+        {
+            FlyingCommentWindow.Close();
+            FlyingCommentWindow = null;
+        }
+
     }
 }

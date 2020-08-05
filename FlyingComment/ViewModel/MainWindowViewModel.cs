@@ -11,15 +11,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Collections;
 using FlyingComment.Repository;
+using FlyingComment.Service;
 
-namespace FlyingComment
+namespace FlyingComment.ViewModel
 {
 
 
-    public class AppModel : INotifyPropertyChanged, IDisposable, INotifyDataErrorInfo
+    public class MainWindowViewModel : INotifyPropertyChanged, IDisposable, INotifyDataErrorInfo
     {
         private FontSettingEntity _FontSetting = new FontSettingEntity();
-
+        private CommentWindowsEntity _CommentWnd = new CommentWindowsEntity();
 
 
         public IEnumerable GetErrors(string propertyName)
@@ -50,7 +51,11 @@ namespace FlyingComment
             {
                 errmsg = _FontSetting.ThicknessStringErrorMessage;
             }
-
+            else
+            if (propertyName == nameof(BackColor))
+            {
+                errmsg = _CommentWnd.BackColor.ColorStringErrorMessage ;
+            }
             if (errmsg != null)
             {
                 ret = new List<string> { errmsg };
@@ -69,44 +74,41 @@ namespace FlyingComment
         {
             get
             {
-                return _FontSetting.IsError();
+                return _FontSetting.IsError() || _CommentWnd.IsError();
             }
         }
 
 
+        
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public AppModel()
+        public MainWindowViewModel()
         {
+    
+
 
             // APP設定でデータの初期化
             try
             {
                 _FontSetting = PropertyXMLRepository.LoadFontSettingEntity();
-                _FontSetting.PropertyChanged += (SendOrPostCallback, arg) =>
-                {
-                    PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
-                    if (proarg == null)
-                    {
-                        throw new ArgumentException("proarg is null");
-                    }
-
-                    PropertyChanged?.Invoke(this, proarg);
-                    ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(proarg.PropertyName));
-                };
+                _FontSetting.PropertyChanged += OnPropertyChanged;
+                _CommentWnd.PropertyChanged += OnPropertyChanged;
 
 
 
-                CommentTime = Properties.Settings.Default.CommentTime;
-                YouTubeAPIKey = Properties.Settings.Default.APIKey;
-                YouTubeVideoID = Properties.Settings.Default.VideoID;
                 CommentWndRect = Properties.Settings.Default.CommentWndRect;
                 SettingWndRect = Properties.Settings.Default.SettingWndRect;
                 CommentWndStste = Properties.Settings.Default.CommentWinState;
-                Topmost = Properties.Settings.Default.Topmost;
+
+                TopMost = Properties.Settings.Default.Topmost;
                 BackColor = Properties.Settings.Default.BackColor;
+
+
+                YouTubeAPIKey = Properties.Settings.Default.APIKey;
+                YouTubeVideoID = Properties.Settings.Default.VideoID;
+
 
                 _logger.Info("設定読み込み終了");
             }
@@ -122,7 +124,7 @@ namespace FlyingComment
         /// <summary>
         /// デストラクタ
         /// </summary>
-        ~AppModel()
+        ~MainWindowViewModel()
         {
             Dispose(false);
         }
@@ -141,6 +143,32 @@ namespace FlyingComment
             }
 
         }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs arg)
+        {
+            if (arg == null)
+            {
+                throw new ArgumentException("proarg is null");
+            }
+
+            PropertyChanged?.Invoke(this, arg);
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(arg.PropertyName));
+
+            //if(nameof(_CommentWnd.ShowFlg) == arg.PropertyName)
+            //{
+            //    IWindowService winService = new Service.FlyingWindowsService();
+            //    if(_CommentWnd.ShowFlg == true)
+            //    {
+            //        winService.CreateWindow(new FlyingCommentsViewModel());
+            //    }else
+            //    {
+            //        winService.CloseWindow();
+
+            //    }
+
+            //}
+        }
+
 
 
         /// <summary>
@@ -253,7 +281,21 @@ namespace FlyingComment
             }
         }
 
-
+        /// <summary>
+        /// コメントの画面滞在時間
+        /// </summary>
+        private string _CommentTime;
+        public string CommentTime
+        {
+            get
+            {
+                return _CommentTime;
+            }
+            set
+            {
+                PropertyChangedIfSet(ref _CommentTime, value);
+            }
+        }
 
         /// <summary>
         /// 排他用ロックオプジェクト
@@ -336,92 +378,68 @@ namespace FlyingComment
         /// <summary>
         /// Window背景の透明化フラグ（True＝透明）
         /// </summary>
-        private bool _Stealth = false;
         public bool Stealth
         {
             get
             {
-                return _Stealth;
+                return _CommentWnd.Stealth;
             }
             set
             {
-                PropertyChangedIfSet(ref _Stealth, value);
+                _CommentWnd.Stealth = value;
             }
         }
 
         /// <summary>
         /// Windowsの非表示化フラグ　（True＝非表示）
         /// </summary>
-        private bool _Visible = true;
         public bool Visible
         {
             get
             {
-                return _Visible;
+                return _CommentWnd.Visible;
             }
             set
             {
 
-                PropertyChangedIfSet(ref _Visible, value);
-                NotifyPropertyChanged("WindowVisible");
+                _CommentWnd.Visible = value;
             }
         }
 
         /// <summary>
         /// WIndowのTOPMost（強制最前面）設定
         /// </summary>
-        private bool _Topmost = true;
-        public bool Topmost
+        public bool TopMost
         {
             get
             {
-                return _Topmost;
+                return _CommentWnd.TopMost;
             }
             set
             {
 
-                PropertyChangedIfSet(ref _Topmost, value);
+                _CommentWnd.TopMost = value;
             }
         }
 
         /// <summary>
         /// Window背景食の設定
         /// </summary>
-        private string _BackColor;
         public string BackColor
         {
             get
             {
-                string ret = "";
-                if(Stealth == false)
-                {
-                    ret = _BackColor;
-                }
-                return ret;
+                return _CommentWnd.BackColor.ValueString;
             }
             set
             {
-                PropertyChangedIfSet(ref _BackColor, value);
+                _CommentWnd.BackColor =  new ColorString(value);
             }
         }
 
 
 
-        /// <summary>
-        /// コメントの画面滞在時間
-        /// </summary>
-        private string _CommentTime;
-        public string CommentTime
-        {
-            get
-            {
-                return _CommentTime;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _CommentTime, value);
-            }
-        }
+
 
         /// <summary>
         /// YouTubeAPIのKey
@@ -575,7 +593,7 @@ namespace FlyingComment
                 Properties.Settings.Default.CommentWndRect = CommentWndRect;
                 Properties.Settings.Default.SettingWndRect = SettingWndRect;
                 Properties.Settings.Default.CommentWinState = CommentWndStste;
-                Properties.Settings.Default.Topmost = Topmost;
+                Properties.Settings.Default.Topmost = TopMost;
                 Properties.Settings.Default.BackColor = BackColor;
 
                 //　プロパティの保存

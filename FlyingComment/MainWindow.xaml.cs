@@ -5,6 +5,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Linq;
 using System.Globalization;
+using FlyingComment.ViewModel;
 
 namespace FlyingComment
 {
@@ -25,7 +26,7 @@ namespace FlyingComment
             App ap= Application.Current as App;
 
             DataContext = ap.Model;
-            AppModel model = DataContext as AppModel;
+            MainWindowViewModel model = DataContext as MainWindowViewModel;
 
             //　ウインドウの位置とサイズを指定
             Left = model.SettingWndRect.Left;
@@ -34,7 +35,7 @@ namespace FlyingComment
             Height = model.SettingWndRect.Height;
          
             //コメントウインドウを作成
-            FlyingCommentsWindow newWnd = new FlyingCommentsWindow(DataContext as AppModel);
+            FlyingCommentsWindow newWnd = new FlyingCommentsWindow(DataContext as MainWindowViewModel);
             newWnd.Show();
 
 
@@ -45,7 +46,7 @@ namespace FlyingComment
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            AppModel model = DataContext as AppModel;
+            MainWindowViewModel model = DataContext as MainWindowViewModel;
 
             if (model != null)
             {
@@ -68,7 +69,7 @@ namespace FlyingComment
         private void RunYouTbbe_Click(object sender, RoutedEventArgs e)
         {
 
-            AppModel model = DataContext as AppModel;
+            MainWindowViewModel model = DataContext as MainWindowViewModel;
 
             model?.RunYouTube();
         }
@@ -81,7 +82,7 @@ namespace FlyingComment
         /// <param name="e"></param>
         private void m_TestSendButton_Click(object sender, RoutedEventArgs e)
         {
-            AppModel model = DataContext as AppModel;
+            MainWindowViewModel model = DataContext as MainWindowViewModel;
             model.PushText(m_TestComment.Text);
         }
         

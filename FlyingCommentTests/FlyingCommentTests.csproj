@@ -53,10 +53,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Model\ColorStringTests.cs" />
+    <Compile Include="Model\CommentWindowsEntityTests.cs" />
     <Compile Include="Model\ErrorMessageContainerTests.cs" />
     <Compile Include="Model\FontSettingEntityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\PropertyXMLRepositoryTests.cs" />
+    <Compile Include="ViewModel\MainWindowViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlyingComment\FlyingComment.csproj">

@@ -28,6 +28,7 @@ namespace FlyingComment.Model
                 && (ColorStringErrorMessage == null)
                 && (ThicknessColorStringErrorMessage == null)
                 && (ThicknessStringErrorMessage == null)
+                && (CommentTimeErrorMessage == null)
                 )
             {
                 ret = false;
@@ -374,6 +375,52 @@ namespace FlyingComment.Model
             }
         }
 
+        private string _CommentTimeString = "4000";
+        public string CommentTimeString {
+            get
+            {
+                return _CommentTimeString;
+            }
+            set
+            {
+                SetProperty(ref _CommentTimeString, value);
+            }
+        }
+
+        public long CommentTime {
+            get
+            {
+                long ret = 0;
+                long.TryParse(CommentTimeString, out ret);
+                return ret;
+            }
+        }
+
+        public string CommentTimeErrorMessage
+        {
+            get
+            {
+                string ret = null;
+                //　フォントサイズ設定
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(CommentTimeString) == false)
+                    {
+                        long.Parse(CommentTimeString);
+                    }
+                    else
+                    {
+                        ret = "コメント待機時間が空白です。";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ret = $"コメント待機時間の変換に失敗{ ex.Message}";
+                }
+
+                return ret;
+            }
+        }
 
     }
 }
