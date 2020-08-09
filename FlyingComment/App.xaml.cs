@@ -1,4 +1,6 @@
-﻿using FlyingComment.ViewModel;
+﻿using FlyingComment.Model;
+using FlyingComment.Repository;
+using FlyingComment.ViewModel;
 using System;
 using System.Windows;
 
@@ -14,10 +16,24 @@ namespace FlyingComment
         /// </summary>
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public CommentStyleEntity CommentStyle
+            { 
+            get;
+            private set;
+            } = null;
 
-      
-        public MainWindowViewModel Model { get; set; } = new MainWindowViewModel();
-  
+
+        public CommentWindowConfigurationEntity CommentWindowConfiguration
+        {
+            get;
+            private set;
+        }
+        = null;
+        public YoutubeConnectEntiy YouTubeConnect
+        {
+            get;
+            private set;
+        }= null;
 
         /// <summary>
         /// メイン関数
@@ -28,10 +44,18 @@ namespace FlyingComment
             try
             {
                 App app = new App();
+
+                app.CommentStyle = PropertyXMLRepository.LoadCommentStyleEntity();
+                app.CommentWindowConfiguration = PropertyXMLRepository.LoadCommentWindowConfigurationEntity();
+                app.YouTubeConnect = PropertyXMLRepository.LoadYoutubeConnectEntiy();
+
                 app.InitializeComponent();
                 app.Run();
 
-                app.Model.Save();
+                //TODO: ここで保存処理
+                //app.Model.Save();
+                PropertyXMLRepository.Save(app.CommentStyle, app.CommentWindowConfiguration, app.YouTubeConnect);
+
 
                 _logger.Info("アプリケーション終了");
 

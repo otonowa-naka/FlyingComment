@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Collections;
 using FlyingComment.Repository;
-using FlyingComment.Service;
 
 namespace FlyingComment.ViewModel
 {
@@ -19,91 +18,33 @@ namespace FlyingComment.ViewModel
 
     public class MainWindowViewModel : INotifyPropertyChanged, IDisposable, INotifyDataErrorInfo
     {
-        private FontSettingEntity _FontSetting = new FontSettingEntity();
-        private CommentWindowsEntity _CommentWnd = new CommentWindowsEntity();
-
-
-        public IEnumerable GetErrors(string propertyName)
-        {
-            IEnumerable ret = null;
-            string errmsg = null;
-
-            if (propertyName == nameof(FamilyString))
-            {
-                errmsg = _FontSetting.FamilyStringErrorMessage;
-            }else
-            if (propertyName == nameof(SizeString))
-            {
-                errmsg = _FontSetting.SizeStringErrorMessage;
-            }
-            else
-            if (propertyName == nameof(ColorString))
-            {
-                errmsg = _FontSetting.ColorStringErrorMessage;
-            }
-            else
-            if (propertyName == nameof(ThicknessColorString))
-            {
-                errmsg = _FontSetting.ThicknessColorStringErrorMessage;
-            }
-            else
-            if (propertyName == nameof(ThicknessString))
-            {
-                errmsg = _FontSetting.ThicknessStringErrorMessage;
-            }
-            else
-            if (propertyName == nameof(BackColor))
-            {
-                errmsg = _CommentWnd.BackColor.ColorStringErrorMessage ;
-            }
-            if (errmsg != null)
-            {
-                ret = new List<string> { errmsg };
-            }
-
-
-
-            return ret;
-        }
-
-
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-
-        public bool HasErrors
-        {
-            get
-            {
-                return _FontSetting.IsError() || _CommentWnd.IsError();
-            }
-        }
-
-
-        
+        private CommentStyleEntity _CommentStyle = null;
+        private CommentWindowConfigurationEntity _CommentWnd = null;
+        private YoutubeConnectEntiy _YouTubeConnect = null; 
+                  
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public MainWindowViewModel()
+        public MainWindowViewModel(CommentStyleEntity style, CommentWindowConfigurationEntity commentWnd, YoutubeConnectEntiy youTubeConnect)
         {
-    
-
-
             // APP設定でデータの初期化
             try
             {
-                _FontSetting = PropertyXMLRepository.LoadFontSettingEntity();
-                _FontSetting.PropertyChanged += OnPropertyChanged;
-                _CommentWnd.PropertyChanged += OnPropertyChanged;
+                _CommentStyle = style;
+                _CommentWnd = commentWnd;
+                _YouTubeConnect = youTubeConnect;
 
 
+                _CommentStyle.PropertyChanged += OnPropertyChanged_CommentStyle;
+                _CommentWnd.PropertyChanged += OnPropertyChanged_CommentWnd;
 
-                CommentWndRect = Properties.Settings.Default.CommentWndRect;
+                CommentWnd_WindowRect = Properties.Settings.Default.CommentWndRect;
                 SettingWndRect = Properties.Settings.Default.SettingWndRect;
                 CommentWndStste = Properties.Settings.Default.CommentWinState;
 
-                TopMost = Properties.Settings.Default.Topmost;
-                BackColor = Properties.Settings.Default.BackColor;
+                CommentWnd_TopMost = Properties.Settings.Default.Topmost;
+                CommentWnd_BackColor = Properties.Settings.Default.BackColor;
 
 
                 YouTubeAPIKey = Properties.Settings.Default.APIKey;
@@ -144,45 +85,100 @@ namespace FlyingComment.ViewModel
 
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs arg)
+        public IEnumerable GetErrors(string propertyName)
+        {
+            IEnumerable ret = null;
+            string errmsg = null;
+
+            if (propertyName == nameof(CommentStyle_FamilyString))
+            {
+                errmsg = _CommentStyle.FamilyStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(CommentStyle_SizeString))
+            {
+                errmsg = _CommentStyle.SizeStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(CommentStyle_ColorString))
+            {
+                errmsg = _CommentStyle.ColorStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(CommentStyle_ThicknessColorString))
+            {
+                errmsg = _CommentStyle.ThicknessColorStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(CommentStyle_ThicknessString))
+            {
+                errmsg = _CommentStyle.ThicknessStringErrorMessage;
+            }
+            else
+            if (propertyName == nameof(CommentWnd_BackColor))
+            {
+                errmsg = _CommentWnd.BackColor.ColorStringErrorMessage;
+            }
+            if (errmsg != null)
+            {
+                ret = new List<string> { errmsg };
+            }
+
+
+
+            return ret;
+        }
+
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+
+        public bool HasErrors
+        {
+            get
+            {
+                return _CommentStyle.IsError() || _CommentWnd.IsError();
+            }
+        }
+
+
+
+        private void OnPropertyChanged_CommentStyle(object sender, PropertyChangedEventArgs arg)
         {
             if (arg == null)
             {
                 throw new ArgumentException("proarg is null");
             }
 
-            PropertyChanged?.Invoke(this, arg);
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(arg.PropertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CommentStyle_" + arg.PropertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("CommentStyle_" + arg.PropertyName));
 
-            //if(nameof(_CommentWnd.ShowFlg) == arg.PropertyName)
-            //{
-            //    IWindowService winService = new Service.FlyingWindowsService();
-            //    if(_CommentWnd.ShowFlg == true)
-            //    {
-            //        winService.CreateWindow(new FlyingCommentsViewModel());
-            //    }else
-            //    {
-            //        winService.CloseWindow();
-
-            //    }
-
-            //}
         }
+        private void OnPropertyChanged_CommentWnd(object sender, PropertyChangedEventArgs arg)
+        {
+            if (arg == null)
+            {
+                throw new ArgumentException("proarg is null");
+            }
 
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CommentWnd_" + arg.PropertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("CommentWnd_" + arg.PropertyName));
+
+        }
 
 
         /// <summary>
         /// フォント名
         /// </summary>
-        public string FamilyString
+        public string CommentStyle_FamilyString
         {
             get
             {
-                return _FontSetting.FamilyString;
+                return _CommentStyle.FamilyString;
             }
             set
             {
-                _FontSetting.FamilyString = value;
+                _CommentStyle.FamilyString = value;
 
             }
         }
@@ -191,15 +187,15 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// フォントサイズ
         /// </summary>
-        public string SizeString
+        public string CommentStyle_SizeString
         {
             get
             {
-                return _FontSetting.SizeString;
+                return _CommentStyle.SizeString;
             }
             set
             {
-                _FontSetting.SizeString = value;
+                _CommentStyle.SizeString = value;
 
             }
         }
@@ -208,15 +204,15 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// フォントイタリックフラグ
         /// </summary>
-        public bool Italic
+        public bool CommentStyle_Italic
         {
             get
             {
-                return _FontSetting.Italic;
+                return _CommentStyle.Italic;
             }
             set
             {
-                _FontSetting.Italic = value;
+                _CommentStyle.Italic = value;
 
             }
         }
@@ -224,76 +220,75 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// フォントボールド設定
         /// </summary>
-        public bool Bald
+        public bool CommentStyle_Bald
         {
             get
             {
-                return _FontSetting.Bald;
+                return _CommentStyle.Bald;
             }
             set
             {
-                _FontSetting.Bald = value;
+                _CommentStyle.Bald = value;
             }
         }
 
         /// <summary>
         /// 文字の色
         /// </summary>
-        public string ColorString
+        public string CommentStyle_ColorString
         {
             get
             {
-                return _FontSetting.ColorString;
+                return _CommentStyle.ColorString;
             }
             set
             {
-                _FontSetting.ColorString = value;
+                _CommentStyle.ColorString = value;
             }
         }
 
         /// <summary>
         /// 文字の縁の色
         /// </summary>
-        public string ThicknessColorString
+        public string CommentStyle_ThicknessColorString
         {
             get
             {
-                return _FontSetting.ThicknessColorString;
+                return _CommentStyle.ThicknessColorString;
             }
             set
             {
-                _FontSetting.ThicknessColorString = value;
+                _CommentStyle.ThicknessColorString = value;
             }
         }
 
         /// <summary>
         /// 文字の縁のピクセル数
         /// </summary>
-        public string ThicknessString
+        public string CommentStyle_ThicknessString
         {
             get
             {
-                return _FontSetting.ThicknessString;
+                return _CommentStyle.ThicknessString;
             }
             set
             {
-                _FontSetting.ThicknessString = value;
+                _CommentStyle.ThicknessString = value;
             }
         }
 
         /// <summary>
         /// コメントの画面滞在時間
         /// </summary>
-        private string _CommentTime;
-        public string CommentTime
+        public string CommentStyle_CommentTimeString
         {
             get
             {
-                return _CommentTime;
+                return _CommentStyle.CommentTimeString;
             }
             set
             {
-                PropertyChangedIfSet(ref _CommentTime, value);
+                _CommentStyle.CommentTimeString = value;
             }
         }
 
@@ -378,7 +373,7 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// Window背景の透明化フラグ（True＝透明）
         /// </summary>
-        public bool Stealth
+        public bool CommentWnd_Stealth
         {
             get
             {
@@ -393,7 +388,7 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// Windowsの非表示化フラグ　（True＝非表示）
         /// </summary>
-        public bool Visible
+        public bool CommentWnd_Visible
         {
             get
             {
@@ -409,7 +404,7 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// WIndowのTOPMost（強制最前面）設定
         /// </summary>
-        public bool TopMost
+        public bool CommentWnd_TopMost
         {
             get
             {
@@ -425,7 +420,7 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// Window背景食の設定
         /// </summary>
-        public string BackColor
+        public string CommentWnd_BackColor
         {
             get
             {
@@ -476,16 +471,15 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// コメントウィンドウの位置とサイズ
         /// </summary>
-        private Rect _CommentWndRect;
-        public Rect CommentWndRect
+        public Rect CommentWnd_WindowRect
         {
             get
             {
-                return _CommentWndRect;
+                return _CommentWnd.WindowRect;
             }
             set
             {
-                PropertyChangedIfSet(ref _CommentWndRect, value);
+                _CommentWnd.WindowRect = value;
             }
         }
 
@@ -576,38 +570,7 @@ namespace FlyingComment.ViewModel
             return ret;
         }
 
-        /// <summary>
-        /// 設定内容の保存処理
-        /// </summary>
-        public void Save()
-        {
-            // APP設定でデータの初期化
-            try
-            {
-                PropertyXMLRepository.SaveFontSettingEntity(_FontSetting);
-
-
-                Properties.Settings.Default.CommentTime = CommentTime;
-                Properties.Settings.Default.APIKey = YouTubeAPIKey;
-                Properties.Settings.Default.VideoID = YouTubeVideoID;
-                Properties.Settings.Default.CommentWndRect = CommentWndRect;
-                Properties.Settings.Default.SettingWndRect = SettingWndRect;
-                Properties.Settings.Default.CommentWinState = CommentWndStste;
-                Properties.Settings.Default.Topmost = TopMost;
-                Properties.Settings.Default.BackColor = BackColor;
-
-                //　プロパティの保存
-                Properties.Settings.Default.Save();
-                _logger.Info("設定書き込み終了");
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"設定書き込み異常 例外メッセージ={ex.Message}");
-
-            }
-        }
-
-
+ 
         /// <summary>
         /// YouTube　コメント開始/終了処理
         /// </summary>

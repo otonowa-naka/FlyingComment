@@ -25,7 +25,7 @@ namespace FlyingComment
 
             App ap= Application.Current as App;
 
-            DataContext = ap.Model;
+            DataContext = new MainWindowViewModel(ap.CommentStyle, ap.CommentWindowConfiguration, ap.YouTubeConnect);
             MainWindowViewModel model = DataContext as MainWindowViewModel;
 
             //　ウインドウの位置とサイズを指定

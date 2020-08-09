@@ -42,14 +42,14 @@ namespace FlyingComment
             this.SetBinding(Stealth, StealthBinding);
 
             //　ウインドウの位置とサイズを設定
-            Left = model.CommentWndRect.Left;
-            Top = model.CommentWndRect.Top;
-            Width = model.CommentWndRect.Width;
-            Height = model.CommentWndRect.Height;
+            Left = model.CommentWnd_WindowRect.Left;
+            Top = model.CommentWnd_WindowRect.Top;
+            Width = model.CommentWnd_WindowRect.Width;
+            Height = model.CommentWnd_WindowRect.Height;
             WindowState = model.CommentWndStste;
             
             ///　透明化の初期状態を設定
-            if (model.Stealth == true)
+            if (model.CommentWnd_Stealth == true)
             {
                 WindowStyle = WindowStyle.None;
                 AllowsTransparency = true;
@@ -146,8 +146,8 @@ namespace FlyingComment
             {
                 //　現在の状態と透明化フラグの状態に差異があるか確認
                 if (
-                    (model.Stealth == true && WindowStyle == WindowStyle.None) ||
-                    (model.Stealth == false && WindowStyle == WindowStyle.SingleBorderWindow)
+                    (model.CommentWnd_Stealth == true && WindowStyle == WindowStyle.None) ||
+                    (model.CommentWnd_Stealth == false && WindowStyle == WindowStyle.SingleBorderWindow)
 
                     )
                 {
@@ -303,7 +303,7 @@ namespace FlyingComment
                         try
                         {
                             long time = 0;
-                            long.TryParse(model.CommentTime, out time);
+                            long.TryParse(model.CommentStyle_CommentTimeString, out time);
                             myDoubleAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));
 
                         }
@@ -405,7 +405,7 @@ namespace FlyingComment
                 if(model != null)
                 {
                     //　位置情報の保存
-                     model.CommentWndRect  = new Rect( Left, Top, Width, Height);
+                     model.CommentWnd_WindowRect = new Rect( Left, Top, Width, Height);
                      model.CommentWndStste = WindowState;
                 }
             }
@@ -447,7 +447,7 @@ namespace FlyingComment
             }
             catch (Exception ex)
             {
-                _logger.Error($"カラー変換で例外 {ex.Message} ColorString={value?.ToString()}");
+                _logger.Error($"カラー変換で例外 {ex.Message} CommentStyle_ColorString={value?.ToString()}");
             }
             return ret;
             

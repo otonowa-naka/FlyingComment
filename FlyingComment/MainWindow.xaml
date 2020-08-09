@@ -54,7 +54,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock  Grid.Column="0" Grid.Row="0"  Text="フォント名"  VerticalAlignment="Center" ></TextBlock>
-        <ComboBox x:Name="m_FontName" Grid.Column="1" Grid.Row="0"  IsEditable="False" ItemsSource="{Binding Fonts.SystemFontFamilies}" SelectedValue="{Binding Path=FamilyString}" SelectedValuePath="Source">
+        <ComboBox x:Name="m_FontName" Grid.Column="1" Grid.Row="0"  IsEditable="False" ItemsSource="{Binding Fonts.SystemFontFamilies}" SelectedValue="{Binding Path=CommentStyle_FamilyString}" SelectedValuePath="Source">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Converter={StaticResource FontFamilyToNameConverter},Mode=OneWay}" FontFamily="{Binding}" FontSize="16"/>
@@ -63,38 +63,38 @@
         </ComboBox>
         
         <TextBlock  Grid.Column="0" Grid.Row="1"  Text="フォントサイズ"  VerticalAlignment="Center" ></TextBlock>
-        <TextBox x:Name="m_FontSize" Grid.Column="1" Grid.Row="1" Margin="10" TextWrapping="Wrap" Text="{Binding Path=SizeString}"  Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
+        <TextBox x:Name="m_FontSize" Grid.Column="1" Grid.Row="1" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_SizeString}"  Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
 
         <TextBlock  Grid.Column="0" Grid.Row="2"  Text="太字"  VerticalAlignment="Center" ></TextBlock>
-        <CheckBox x:Name="m_BoldBox" Grid.Column="1" Grid.Row="2" Margin="10" VerticalAlignment="Center" IsChecked="{Binding Bald}" ></CheckBox>
+        <CheckBox x:Name="m_BoldBox" Grid.Column="1" Grid.Row="2" Margin="10" VerticalAlignment="Center" IsChecked="{Binding CommentStyle_Bald}" ></CheckBox>
         
         <TextBlock  Grid.Column="0" Grid.Row="3"  Text="イタリック"  VerticalAlignment="Center" ></TextBlock>
-        <CheckBox x:Name="m_ItalicBox" Grid.Column="1" Grid.Row="3" Margin="10" VerticalAlignment="Center" IsChecked="{Binding Italic}"></CheckBox>
+        <CheckBox x:Name="m_ItalicBox" Grid.Column="1" Grid.Row="3" Margin="10" VerticalAlignment="Center" IsChecked="{Binding CommentStyle_Italic}"></CheckBox>
 
         <TextBlock  Grid.Column="0" Grid.Row="4"  Text="文字縁太さ"  VerticalAlignment="Center" ></TextBlock>
-        <TextBox x:Name="m_FontThicknessSize" Grid.Column="1" Grid.Row="4" Margin="10" TextWrapping="Wrap" Text="{Binding Path=ThicknessString}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
+        <TextBox x:Name="m_FontThicknessSize" Grid.Column="1" Grid.Row="4" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_ThicknessString}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="5"  Text="文字縁色"  VerticalAlignment="Center" ></TextBlock>
-        <TextBox x:Name="m_FontThicknessColor" Grid.Column="1" Grid.Row="5" Margin="10" TextWrapping="Wrap" Text="{Binding Path=ThicknessColorString,UpdateSourceTrigger=PropertyChanged}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
+        <TextBox x:Name="m_FontThicknessColor" Grid.Column="1" Grid.Row="5" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_ThicknessColorString,UpdateSourceTrigger=PropertyChanged}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="6"  Text="文字塗りつぶし色"  VerticalAlignment="Center" ></TextBlock>
-        <TextBox x:Name="m_FontColor" Grid.Column="1" Grid.Row="6" Margin="10" TextWrapping="Wrap" Text="{Binding Path=ColorString}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
+        <TextBox x:Name="m_FontColor" Grid.Column="1" Grid.Row="6" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_ColorString}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
 
         <TextBlock  Grid.Column="0" Grid.Row="7"  Text="コメント滞在時間(ミリ秒)"  VerticalAlignment="Center" ></TextBlock>
-        <TextBox x:Name="m_CommentTime" Grid.Column="1" Grid.Row="7" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentTime}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
+        <TextBox x:Name="m_CommentTime" Grid.Column="1" Grid.Row="7" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_CommentTime}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="8"  Text="Window 背景色"  VerticalAlignment="Center" ></TextBlock>
-        <TextBox x:Name="m_BackColor" Grid.Column="1" Grid.Row="8" Margin="10" TextWrapping="Wrap" Text="{Binding Path=BackColor,UpdateSourceTrigger=PropertyChanged}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
+        <TextBox x:Name="m_BackColor" Grid.Column="1" Grid.Row="8" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentWnd_BackColor,UpdateSourceTrigger=PropertyChanged}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
 
 
         <TextBlock  Grid.Column="0" Grid.Row="9"  Text="Windowを最善面にする"  VerticalAlignment="Center" ></TextBlock>
-        <CheckBox x:Name="m_WindowStealthButton" Grid.Column="1" Grid.Row="9"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=Topmost}"  />
+        <CheckBox x:Name="m_WindowStealthButton" Grid.Column="1" Grid.Row="9"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=CommentWnd_Topmost}"  />
 
         <TextBlock  Grid.Column="0" Grid.Row="10"  Text="Windowを透明にする"  VerticalAlignment="Center" ></TextBlock>
-        <CheckBox x:Name="m_TopmosthButton" Grid.Column="1" Grid.Row="10"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=Stealth}"  />
+        <CheckBox x:Name="m_TopmosthButton" Grid.Column="1" Grid.Row="10"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=CommentWnd_Stealth}"  />
         
         <TextBlock  Grid.Column="0" Grid.Row="11"  Text="コメントを表示する"  VerticalAlignment="Center" ></TextBlock>
-        <CheckBox x:Name="m_WindowHideButton" Grid.Column="1" Grid.Row="11"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=Visible}" />
+        <CheckBox x:Name="m_WindowHideButton" Grid.Column="1" Grid.Row="11"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=CommentWnd_Visible}" />
 
 
         <TextBlock  Grid.Column="0" Grid.Row="12"  Text="テストコメント文字列"  VerticalAlignment="Center" ></TextBlock>

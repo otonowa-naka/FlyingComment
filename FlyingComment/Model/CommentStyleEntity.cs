@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace FlyingComment.Model
 {
-    public class FontSettingEntity : NotifyChangedBase
+    public class CommentStyleEntity : NotifyChangedBase
     {
 
 

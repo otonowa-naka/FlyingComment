@@ -78,6 +78,7 @@
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -100,10 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ColorString.cs" />
-    <Compile Include="Model\CommentWindowsEntity.cs" />
+    <Compile Include="Model\CommentWindowConfigurationEntity.cs" />
+    <Compile Include="Model\YoutubeConnectEntiy.cs" />
     <Compile Include="Repository\PropertyXMLRepository.cs" />
-    <Compile Include="Service\FlyingWindowsService.cs" />
-    <Compile Include="Service\IWindowService.cs" />
     <Compile Include="ViewModel\FlyingCommentsViewModel.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -111,7 +111,7 @@
     </Page>
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="Model\Base\ErrorMessageContainer.cs" />
-    <Compile Include="Model\FontSettingEntity.cs" />
+    <Compile Include="Model\CommentStyleEntity.cs" />
     <Compile Include="Model\Base\NotifyChangedBase.cs" />
     <Compile Include="OutlineTextControl.cs" />
     <Page Include="FlyingCommentsWindow.xaml">
@@ -173,6 +173,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

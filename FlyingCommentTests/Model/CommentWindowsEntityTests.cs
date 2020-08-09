@@ -7,19 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Media;
+using System.Windows;
 
 namespace FlyingComment.Model.Tests
 {
     [TestClass()]
     public class CommentWindowsEntityTests
     {
-        CommentWindowsEntity CommentWnd = null;
+        CommentWindowConfigurationEntity CommentWnd = null;
         string LastPropertyChangeName;
 
         [TestInitialize]
         public void 前準備()
         {
-            CommentWnd = new CommentWindowsEntity();
+            CommentWnd = new CommentWindowConfigurationEntity();
             CommentWnd.PropertyChanged += (send, arg) =>
             {
                 PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
@@ -102,5 +103,35 @@ namespace FlyingComment.Model.Tests
             Assert.AreEqual(nameof(CommentWnd.BackColor), LastPropertyChangeName);
         }
 
+        [TestMethod]
+        public void Windows位置の保持()
+        {
+            CommentWnd.WindowRect = new Rect(100, 200, 300, 400);
+            Assert.AreEqual(new Rect(100, 200, 300, 400), CommentWnd.WindowRect);
+        }
+
+        [TestMethod]
+        public void Windows位置の変更通知()
+        {
+            CommentWnd.WindowRect = new Rect(100, 200, 300, 400);
+            Assert.AreEqual(nameof(CommentWnd.WindowRect), LastPropertyChangeName);
+
+        }
+
+
+        [TestMethod]
+        public void Windows状態の保持()
+        {
+            CommentWnd.State = WindowState.Minimized; 
+            Assert.AreEqual(WindowState.Minimized, CommentWnd.State);
+        }
+
+        [TestMethod]
+        public void Windows状態の変更通知()
+        {
+            CommentWnd.State = WindowState.Maximized; 
+            Assert.AreEqual(nameof(CommentWnd.State), LastPropertyChangeName);
+
+        }
     }
 }

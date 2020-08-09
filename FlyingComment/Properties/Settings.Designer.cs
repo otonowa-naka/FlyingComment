@@ -202,5 +202,29 @@ namespace FlyingComment.Properties {
                 this["Topmost"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Stealth {
+            get {
+                return ((bool)(this["Stealth"]));
+            }
+            set {
+                this["Stealth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Visible {
+            get {
+                return ((bool)(this["Visible"]));
+            }
+            set {
+                this["Visible"] = value;
+            }
+        }
     }
 }

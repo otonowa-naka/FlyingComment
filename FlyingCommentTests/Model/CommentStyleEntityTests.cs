@@ -11,16 +11,16 @@ using System.Windows.Media;
 namespace FlyingComment.Model.Tests
 {
     [TestClass()]
-    public class FontSettingEntityTests
+    public class CommentStyleEntityTests
     {
-        FontSettingEntity FontSet;
+        CommentStyleEntity FontSet;
         string LastPropertyChangeName ;
         bool ChangeEvent = false;
 
         [TestInitialize]
         public void setup()
         {
-            FontSet = new FontSettingEntity();
+            FontSet = new CommentStyleEntity();
             FontSet.PropertyChanged += (send, arg) =>
             {
                 PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
@@ -156,7 +156,7 @@ namespace FlyingComment.Model.Tests
         public void SizeStringErrorTest()
         {
             // 初期値はエラー
-            FontSettingEntity fontset = new FontSettingEntity();
+            CommentStyleEntity fontset = new CommentStyleEntity();
 
 
             bool ChangeEvent = false;
@@ -257,7 +257,7 @@ namespace FlyingComment.Model.Tests
         public void ColorStringStringTest()
         {
             // 初期値はエラー
-            FontSettingEntity fontset = new FontSettingEntity();
+            CommentStyleEntity fontset = new CommentStyleEntity();
 
 
             bool ChangeEvent = false;
