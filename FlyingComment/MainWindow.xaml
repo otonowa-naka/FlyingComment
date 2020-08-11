@@ -104,10 +104,10 @@
         <Button x:Name="m_TestSendButton" Grid.Column="1" Grid.Row="13"  Margin="10" Content="テストコメント表示" Click="m_TestSendButton_Click" />
 
         <TextBlock  Grid.Column="0" Grid.Row="14"  Text="Google API Key"  VerticalAlignment="Center"></TextBlock>
-        <TextBox x:Name="m_APIKey" Grid.Column="1" Grid.Row="14" Margin="10" TextWrapping="Wrap" Text="{Binding Path=YouTubeAPIKey}"/>
+        <TextBox x:Name="m_APIKey" Grid.Column="1" Grid.Row="14" Margin="10" TextWrapping="Wrap" Text="{Binding Path=YouTubeConnect_ApiKey}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="15"  Text="VideoID"  VerticalAlignment="Center"></TextBlock>
-        <TextBox x:Name="m_VideoID" Grid.Column="1" Grid.Row="15" Margin="10" TextWrapping="Wrap" Text="{Binding Path=YouTubeVideoID}"/>
+        <TextBox x:Name="m_VideoID" Grid.Column="1" Grid.Row="15" Margin="10" TextWrapping="Wrap" Text="{Binding Path=YouTubeConnect_VideoID}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="17"  Text="実行"  VerticalAlignment="Center" ></TextBlock>
         <Button x:Name="button" Grid.Column="1" Grid.Row="17"  Margin="10" Content="{Binding Path=IsTaskRunning, Converter={StaticResource YouTubeRunButtonConverter}}"  Click="RunYouTbbe_Click"/>

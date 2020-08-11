@@ -106,32 +106,17 @@ namespace FlyingComment.Model.Tests
         [TestMethod]
         public void Windows位置の保持()
         {
-            CommentWnd.WindowRect = new Rect(100, 200, 300, 400);
-            Assert.AreEqual(new Rect(100, 200, 300, 400), CommentWnd.WindowRect);
+            CommentWnd.Position = new WindowsPositionEntiy( new Rect(100, 200, 300, 400), WindowState.Minimized);
+            Assert.AreEqual(new Rect(100, 200, 300, 400), CommentWnd.Position.WindowRect);
         }
 
         [TestMethod]
         public void Windows位置の変更通知()
         {
-            CommentWnd.WindowRect = new Rect(100, 200, 300, 400);
-            Assert.AreEqual(nameof(CommentWnd.WindowRect), LastPropertyChangeName);
+            CommentWnd.Position = new WindowsPositionEntiy(new Rect(100, 200, 300, 400), WindowState.Minimized);
+            Assert.AreEqual(nameof(CommentWnd.Position), LastPropertyChangeName);
 
         }
-
-
-        [TestMethod]
-        public void Windows状態の保持()
-        {
-            CommentWnd.State = WindowState.Minimized; 
-            Assert.AreEqual(WindowState.Minimized, CommentWnd.State);
-        }
-
-        [TestMethod]
-        public void Windows状態の変更通知()
-        {
-            CommentWnd.State = WindowState.Maximized; 
-            Assert.AreEqual(nameof(CommentWnd.State), LastPropertyChangeName);
-
-        }
+        
     }
 }

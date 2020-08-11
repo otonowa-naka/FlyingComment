@@ -100,10 +100,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\CommentTextEntiy.cs" />
     <Compile Include="Model\ColorString.cs" />
+    <Compile Include="Model\CommentQueueEntity.cs" />
     <Compile Include="Model\CommentWindowConfigurationEntity.cs" />
+    <Compile Include="Model\WindowsPositionEntiy..cs" />
     <Compile Include="Model\YoutubeConnectEntiy.cs" />
     <Compile Include="Repository\PropertyXMLRepository.cs" />
+    <Compile Include="Service\YoutubeCommentPollingService.cs" />
     <Compile Include="ViewModel\FlyingCommentsViewModel.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -174,9 +178,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Service\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

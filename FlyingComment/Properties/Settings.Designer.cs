@@ -226,5 +226,17 @@ namespace FlyingComment.Properties {
                 this["Visible"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public global::System.Windows.WindowState SettingState {
+            get {
+                return ((global::System.Windows.WindowState)(this["SettingState"]));
+            }
+            set {
+                this["SettingState"] = value;
+            }
+        }
     }
 }

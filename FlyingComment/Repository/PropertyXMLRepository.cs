@@ -9,11 +9,12 @@ namespace FlyingComment.Repository
 {
     public static class PropertyXMLRepository
     {
-        public static void Save(CommentStyleEntity style, CommentWindowConfigurationEntity commentWnd, YoutubeConnectEntiy youTube)
+        public static void Save(CommentStyleEntity style, CommentWindowConfigurationEntity commentWnd, YoutubeConnectEntiy youTube, WindowsPositionEntiy settingWindowPos)
         {
             SaveCommentStyleEntity(style);
             SaveCommentWindowConfigurationEntity(commentWnd);
             SaveYoutubeConnectEntiy(youTube);
+            SaveSettingWindowPositionEntiy(settingWindowPos);
 
             Properties.Settings.Default.Save();
         }
@@ -32,6 +33,10 @@ namespace FlyingComment.Repository
 
             return ret;
         }
+        internal static WindowsPositionEntiy LoadSettingWindowPositionEntiy()
+        {
+            return new WindowsPositionEntiy(Properties.Settings.Default.SettingWndRect, Properties.Settings.Default.SettingState);
+        }
 
         private static void SaveCommentStyleEntity(CommentStyleEntity entity)
         {
@@ -45,6 +50,8 @@ namespace FlyingComment.Repository
             Properties.Settings.Default.CommentTime = entity.CommentTimeString;
         }
 
+
+
         public static CommentWindowConfigurationEntity LoadCommentWindowConfigurationEntity()
         {
             CommentWindowConfigurationEntity ret = new CommentWindowConfigurationEntity();
@@ -52,9 +59,8 @@ namespace FlyingComment.Repository
             ret.Visible = Properties.Settings.Default.Visible;
             ret.TopMost = Properties.Settings.Default.Topmost;
             ret.BackColor = new ColorString( Properties.Settings.Default.BackColor);
-            ret.WindowRect = Properties.Settings.Default.CommentWndRect;
-            ret.State = Properties.Settings.Default.CommentWinState;
- 
+            ret.Position = new WindowsPositionEntiy(Properties.Settings.Default.CommentWndRect, Properties.Settings.Default.CommentWinState);
+
             return ret;
         }
 
@@ -64,8 +70,8 @@ namespace FlyingComment.Repository
              Properties.Settings.Default.Visible = entity.Visible;
              Properties.Settings.Default.Topmost = entity.TopMost;
              Properties.Settings.Default.BackColor = entity.BackColor.ValueString;
-             Properties.Settings.Default.CommentWndRect = entity.WindowRect;
-             Properties.Settings.Default.CommentWinState = entity.State;
+             Properties.Settings.Default.CommentWndRect = entity.Position.WindowRect;
+             Properties.Settings.Default.CommentWinState = entity.Position.State;
         }
         public static YoutubeConnectEntiy LoadYoutubeConnectEntiy()
         {
@@ -80,6 +86,12 @@ namespace FlyingComment.Repository
         {
             Properties.Settings.Default.APIKey = entity.ApiKey;
             Properties.Settings.Default.VideoID = entity.VideoID;
+        }
+
+        private static void SaveSettingWindowPositionEntiy(WindowsPositionEntiy entity)
+        {
+            Properties.Settings.Default.SettingWndRect = entity.WindowRect;
+            Properties.Settings.Default.SettingState = entity.State;
         }
 
     }

@@ -21,7 +21,7 @@ namespace FlyingComment.ViewModel.Tests
         [TestInitialize]
         public void setup()
         {
-            MainViewModel = new MainWindowViewModel(new CommentStyleEntity(), new CommentWindowConfigurationEntity(), new YoutubeConnectEntiy());
+            MainViewModel = new MainWindowViewModel(new CommentStyleEntity(), new CommentWindowConfigurationEntity(), new YoutubeConnectEntiy(), new WindowsPositionEntiy() );
             MainViewModel.PropertyChanged += (send, arg) =>
             {
                 PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;
@@ -88,8 +88,22 @@ namespace FlyingComment.ViewModel.Tests
         [TestMethod]
         public void CommentWndRectを変更すると変更通知をする()
         {
-            MainViewModel.CommentWnd_WindowRect = new Rect(10,10,10,10);
-            Assert.AreEqual(nameof(MainViewModel.CommentWnd_WindowRect), LastPropertyChangeName);
+            MainViewModel.CommentWnd_Position = new WindowsPositionEntiy( new Rect(10,10,10,10), WindowState.Minimized);
+            Assert.AreEqual(nameof(MainViewModel.CommentWnd_Position), LastPropertyChangeName);
+        }
+
+        [TestMethod]
+        public void YouTubeConnect_ApiKeyを変更すると変更通知をする()
+        {
+            MainViewModel.YouTubeConnect_ApiKey = "11111";
+            Assert.AreEqual(nameof(MainViewModel.YouTubeConnect_ApiKey), LastPropertyChangeName);
+        }
+
+        [TestMethod]
+        public void YouTubeConnect_VideoIDを変更すると変更通知をする()
+        {
+            MainViewModel.YouTubeConnect_VideoID = "11111";
+            Assert.AreEqual(nameof(MainViewModel.YouTubeConnect_VideoID), LastPropertyChangeName);
         }
     }
 }

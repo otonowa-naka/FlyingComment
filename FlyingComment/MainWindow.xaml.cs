@@ -25,14 +25,11 @@ namespace FlyingComment
 
             App ap= Application.Current as App;
 
-            DataContext = new MainWindowViewModel(ap.CommentStyle, ap.CommentWindowConfiguration, ap.YouTubeConnect);
+            DataContext = new MainWindowViewModel(ap.CommentStyle, ap.CommentWindowConfiguration, ap.YouTubeConnect, ap.SettingWindowPosition);
             MainWindowViewModel model = DataContext as MainWindowViewModel;
 
             //　ウインドウの位置とサイズを指定
-            Left = model.SettingWndRect.Left;
-            Top = model.SettingWndRect.Top;
-            Width = model.SettingWndRect.Width;
-            Height = model.SettingWndRect.Height;
+            model.SettingWindowPosition.MoveWindow(this);
          
             //コメントウインドウを作成
             FlyingCommentsWindow newWnd = new FlyingCommentsWindow(DataContext as MainWindowViewModel);
@@ -51,7 +48,7 @@ namespace FlyingComment
             if (model != null)
             {
                 //　現在のウインドウ位置とサイズを保存
-                model.SettingWndRect = new Rect(Left, Top, Width, Height);
+                model.SettingWindowPosition = new Model.WindowsPositionEntiy(this);
             }
         }
 
@@ -71,7 +68,7 @@ namespace FlyingComment
 
             MainWindowViewModel model = DataContext as MainWindowViewModel;
 
-            model?.RunYouTube();
+            //model?.RunYouTube();
         }
 
 
@@ -83,7 +80,7 @@ namespace FlyingComment
         private void m_TestSendButton_Click(object sender, RoutedEventArgs e)
         {
             MainWindowViewModel model = DataContext as MainWindowViewModel;
-            model.PushText(m_TestComment.Text);
+          //  model.PushText(m_TestComment.Text);
         }
         
 

@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using OutlineText;
 using FlyingComment.ViewModel;
+using FlyingComment.Model;
 
 namespace FlyingComment
 {
@@ -42,11 +43,7 @@ namespace FlyingComment
             this.SetBinding(Stealth, StealthBinding);
 
             //　ウインドウの位置とサイズを設定
-            Left = model.CommentWnd_WindowRect.Left;
-            Top = model.CommentWnd_WindowRect.Top;
-            Width = model.CommentWnd_WindowRect.Width;
-            Height = model.CommentWnd_WindowRect.Height;
-            WindowState = model.CommentWndStste;
+            model.CommentWnd_Position.MoveWindow(this);
             
             ///　透明化の初期状態を設定
             if (model.CommentWnd_Stealth == true)
@@ -205,7 +202,7 @@ namespace FlyingComment
 
             if (model != null)
             {
-                string flytext = model.PopText();
+                string flytext = "";// model.PopText();
                 if(string.IsNullOrEmpty(flytext) == false)
                 {
                     //　コメントのテキストコントロール
@@ -405,8 +402,7 @@ namespace FlyingComment
                 if(model != null)
                 {
                     //　位置情報の保存
-                     model.CommentWnd_WindowRect = new Rect( Left, Top, Width, Height);
-                     model.CommentWndStste = WindowState;
+                    model.CommentWnd_Position = new WindowsPositionEntiy(this);
                 }
             }
             catch (Exception ex)

@@ -85,18 +85,12 @@ namespace FlyingComment.Model
             }
         }
 
-        private Rect _WindowRect = new Rect(500, 0, 300, 300);
-        public Rect WindowRect
+        private WindowsPositionEntiy _Position = new WindowsPositionEntiy( new Rect(500, 0, 300, 300), WindowState.Normal);
+        public WindowsPositionEntiy Position
         {
-            get { return _WindowRect; }
-            set { SetProperty(ref _WindowRect, value); }
+            get { return _Position; }
+            set { SetProperty(ref _Position, value); }
         }
 
-        private WindowState _WindowState = WindowState.Normal;
-        public WindowState State
-        {
-            get { return _WindowState; }
-            set { SetProperty(ref _WindowState, value); }
-        }
     }
 }

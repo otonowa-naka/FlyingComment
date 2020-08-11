@@ -35,6 +35,13 @@ namespace FlyingComment
             private set;
         }= null;
 
+        public WindowsPositionEntiy SettingWindowPosition
+        {
+            get;
+            private set;
+        } = null;
+
+
         /// <summary>
         /// メイン関数
         /// </summary>
@@ -48,14 +55,12 @@ namespace FlyingComment
                 app.CommentStyle = PropertyXMLRepository.LoadCommentStyleEntity();
                 app.CommentWindowConfiguration = PropertyXMLRepository.LoadCommentWindowConfigurationEntity();
                 app.YouTubeConnect = PropertyXMLRepository.LoadYoutubeConnectEntiy();
+                app.SettingWindowPosition = PropertyXMLRepository.LoadSettingWindowPositionEntiy();
 
                 app.InitializeComponent();
                 app.Run();
 
-                //TODO: ここで保存処理
-                //app.Model.Save();
-                PropertyXMLRepository.Save(app.CommentStyle, app.CommentWindowConfiguration, app.YouTubeConnect);
-
+                PropertyXMLRepository.Save(app.CommentStyle, app.CommentWindowConfiguration, app.YouTubeConnect, app.SettingWindowPosition);
 
                 _logger.Info("アプリケーション終了");
 

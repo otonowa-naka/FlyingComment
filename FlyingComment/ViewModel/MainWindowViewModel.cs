@@ -16,17 +16,23 @@ namespace FlyingComment.ViewModel
 {
 
 
-    public class MainWindowViewModel : INotifyPropertyChanged, IDisposable, INotifyDataErrorInfo
+    public class MainWindowViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         private CommentStyleEntity _CommentStyle = null;
         private CommentWindowConfigurationEntity _CommentWnd = null;
-        private YoutubeConnectEntiy _YouTubeConnect = null; 
-                  
+        private YoutubeConnectEntiy _YouTubeConnect = null;
+        public WindowsPositionEntiy SettingWindowPosition { set; get; } = null;
+
+        /// <summary>
+        /// ログインスタンス
+        /// </summary>
+        private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public MainWindowViewModel(CommentStyleEntity style, CommentWindowConfigurationEntity commentWnd, YoutubeConnectEntiy youTubeConnect)
+        public MainWindowViewModel(CommentStyleEntity style, CommentWindowConfigurationEntity commentWnd, YoutubeConnectEntiy youTubeConnect, WindowsPositionEntiy settingWindowPosition)
         {
             // APP設定でデータの初期化
             try
@@ -34,56 +40,24 @@ namespace FlyingComment.ViewModel
                 _CommentStyle = style;
                 _CommentWnd = commentWnd;
                 _YouTubeConnect = youTubeConnect;
-
+                SettingWindowPosition = settingWindowPosition;
 
                 _CommentStyle.PropertyChanged += OnPropertyChanged_CommentStyle;
                 _CommentWnd.PropertyChanged += OnPropertyChanged_CommentWnd;
+                _YouTubeConnect.PropertyChanged += OnPropertyChanged_YouTubeConnect;
 
-                CommentWnd_WindowRect = Properties.Settings.Default.CommentWndRect;
-                SettingWndRect = Properties.Settings.Default.SettingWndRect;
-                CommentWndStste = Properties.Settings.Default.CommentWinState;
-
-                CommentWnd_TopMost = Properties.Settings.Default.Topmost;
-                CommentWnd_BackColor = Properties.Settings.Default.BackColor;
-
-
-                YouTubeAPIKey = Properties.Settings.Default.APIKey;
-                YouTubeVideoID = Properties.Settings.Default.VideoID;
-
-
-                _logger.Info("設定読み込み終了");
+                
             }
             catch (Exception ex)
             {
-                _logger.Error($"設定読み込み異常 例外メッセージ={ex.Message}");
+                _logger.Error($"MainWindowViewModelの例外メッセージ={ex.Message}");
 
             }
         }
 
 
 
-        /// <summary>
-        /// デストラクタ
-        /// </summary>
-        ~MainWindowViewModel()
-        {
-            Dispose(false);
-        }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                ClearTask();
-            }
-
-        }
 
         public IEnumerable GetErrors(string propertyName)
         {
@@ -165,8 +139,41 @@ namespace FlyingComment.ViewModel
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("CommentWnd_" + arg.PropertyName));
 
         }
+        private void OnPropertyChanged_YouTubeConnect(object sender, PropertyChangedEventArgs arg)
+        {
+            if (arg == null)
+            {
+                throw new ArgumentException("proarg is null");
+            }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("YouTubeConnect_" + arg.PropertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("YouTubeConnect_" + arg.PropertyName));
+
+        }
 
 
+ 
+
+        /// <summary>
+        /// プロパティ変更イベントハンドラ
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// プロパティの更新通知を発行します。
+        /// </summary>
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+
+
+ 
+        #region _CommentStyleプロパティ
         /// <summary>
         /// フォント名
         /// </summary>
@@ -291,84 +298,10 @@ namespace FlyingComment.ViewModel
                 _CommentStyle.CommentTimeString = value;
             }
         }
-
-        /// <summary>
-        /// 排他用ロックオプジェクト
-        /// </summary>
-        private object _LockObject = new object();
-        
-
-        /// <summary>
-        /// ログインスタンス
-        /// </summary>
-        private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        #endregion
 
 
-        /// <summary>
-        /// プロパティ変更イベントハンドラ
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// プロパティの更新通知を発行します。
-        /// </summary>
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-
-
-        #region プロパティ
-        /// <summary>
-        /// コメントのリスト
-        /// </summary>
-        private List<string> _TextList = new List<string>();
-        public int TextListCount
-        {
-            get
-            {
-                return _TextList.Count;
-            }
-            
-        }
-
-        /// <summary>
-        /// コメントリストに追加
-        /// </summary>
-        /// <param name="addText"></param>
-        public void PushText(string addText)
-        {
-            lock (_LockObject)
-            {
-                _TextList.Add(addText);
-            }
-            NotifyPropertyChanged("TextListCount");
-        }
-
-        /// <summary>
-        /// コメントリストから１行分のコメントを取得
-        /// </summary>
-        /// <returns></returns>
-        public string PopText( )
-        {
-            string ret = "";
-            lock (_LockObject)
-            {
-                if (_TextList.Count() > 0)
-                {
-                    ret = _TextList[0];
-                    _TextList.RemoveAt(0);
-                    NotifyPropertyChanged("TextListCount");
-
-                }
-            }
-            return ret;
-        }
-
+        #region _CommentWndプロパティ
 
         /// <summary>
         /// Window背景の透明化フラグ（True＝透明）
@@ -383,7 +316,7 @@ namespace FlyingComment.ViewModel
             {
                 _CommentWnd.Stealth = value;
             }
-        }
+        } 
 
         /// <summary>
         /// Windowsの非表示化フラグ　（True＝非表示）
@@ -432,72 +365,22 @@ namespace FlyingComment.ViewModel
             }
         }
 
-
-
-
-
-        /// <summary>
-        /// YouTubeAPIのKey
-        /// </summary>
-        private string _YouTubeAPIKey;
-        public string YouTubeAPIKey
-        {
-            get
-            {
-                return _YouTubeAPIKey;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _YouTubeAPIKey, value);
-            }
-        }
-
-        /// <summary>
-        /// YouTubeのVideoKey
-        /// </summary>
-        private string _YouTubeVideoID;
-        public string YouTubeVideoID
-        {
-            get
-            {
-                return _YouTubeVideoID;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _YouTubeVideoID, value);
-            }
-        }
-
         /// <summary>
         /// コメントウィンドウの位置とサイズ
         /// </summary>
-        public Rect CommentWnd_WindowRect
+        public WindowsPositionEntiy CommentWnd_Position
         {
             get
             {
-                return _CommentWnd.WindowRect;
+                return _CommentWnd.Position;
             }
             set
             {
-                _CommentWnd.WindowRect = value;
+                _CommentWnd.Position = value;
             }
         }
 
-        /// <summary>
-        /// 設定ウィンドウの位置
-        /// </summary>
-        private Rect _SettingWndRect;
-        public Rect SettingWndRect
-        {
-            get
-            {
-                return _SettingWndRect;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _SettingWndRect, value);
-            }
-        }
+
 
         /// <summary>
         /// コメントウィンドウの状態
@@ -514,38 +397,44 @@ namespace FlyingComment.ViewModel
                 PropertyChangedIfSet(ref _CommentWndStste, value);
             }
         }
+        #endregion
 
-        /// <summary>
-        /// コメント取得スレッド
-        /// </summary>
-        private Task _Task = null;
-        /// <summary>
-        /// コメント取得スレッドCancelトークン
-        /// </summary>
-        private CancellationTokenSource _TokenSource = null;
 
+        #region _YouTubeConnect プロパティ
         /// <summary>
-        ///　コメント取得スレッド状態取得
+        /// YouTubeAPIKey
         /// </summary>
-        public bool IsTaskRunning
+        public string YouTubeConnect_ApiKey
         {
             get
             {
-                bool ret = false;
-                lock (_LockObject)
-                {
-                    if (_Task != null)
-                    {
-                        // Completedでなければ実行中状態
-                        ret = (_Task.IsCompleted == false);
-                    }
-                }
-                return ret;
+                return _YouTubeConnect.ApiKey;
+            }
+            set
+            {
+                _YouTubeConnect.ApiKey = value;
             }
         }
 
-
+        /// <summary>
+        /// YouTubeのVideoID
+        /// </summary>
+        public string YouTubeConnect_VideoID
+        {
+            get
+            {
+                return _YouTubeConnect.VideoID;
+            }
+            set
+            {
+                _YouTubeConnect.VideoID = value;
+            }
+        }
         #endregion
+
+
+ 
+
 
         /// <summary>
         /// 前と値が違うなら変更してイベントを発行する
@@ -571,170 +460,6 @@ namespace FlyingComment.ViewModel
         }
 
  
-        /// <summary>
-        /// YouTube　コメント開始/終了処理
-        /// </summary>
-        public void RunYouTube()
-        {
-            try
-            {
-                //　現行の起動状態を確認
-                if (IsTaskRunning == false)
-                {
-                    //　実行済みの可能性もあるのでTaskをクリアする
-                    ClearTask();
-
-                    //　ビデオIDが設定されていることを確認する
-                    if (string.IsNullOrEmpty(YouTubeVideoID) == false)
-                    {
-
-                        string VideoId = YouTubeVideoID;
-                        _TokenSource = new CancellationTokenSource();
-                    
-                        //スレッド内で通信を実行
-                        _Task = Task.Run(() =>
-                        {
-                            CommentMonitorTask(VideoId);
-
-                            // スレッドが終了したことを伝えるために
-                            NotifyPropertyChanged(nameof(IsTaskRunning));
-                        }
-                        );
-
-                        //スレッドが終了するので変更通知を実行
-                        NotifyPropertyChanged(nameof(IsTaskRunning));
-
-                    }
-                }else
-                {
-                    ClearTask();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"コメント取得実行で例外 例外メッセージ={ex.Message}");
-
-            }
-        }
-
-
-
-        /// <summary>
-        /// タスクを終了させてNULL化
-        /// </summary>
-        private void ClearTask()
-        {
-            try
-            {
-                if (_Task != null)
-                {
-                    _TokenSource.Cancel();
-                    _Task.Wait();
-
-                    _Task.Dispose();
-                    _TokenSource.Dispose();
-
-                    _TokenSource = null;
-                    _Task = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"タスクキャンセル実行で例外メッセージ={ex.Message}");
-                throw;
-            }
-        }
-
-
-
-        
-        /// <summary>
-        /// Youtubeのチャット監視スレッドメイン処理
-        /// </summary>
-        /// <param name="videoId"></param>
-        private void CommentMonitorTask(string videoId)
-        {
-            try
-            {
-                _logger.Info($"Youtubes監視スレッド実行開始 API={YouTubeAPIKey}, Video={videoId}");
-
-                using (YouTubeService Youtube = new YouTubeService(new BaseClientService.Initializer() { ApiKey = YouTubeAPIKey }))
-                {
-                    string liveChatId = GetliveChatID(videoId, Youtube);
-
-                    _logger.Info($"YouTubeチャットID成功 ChatId={liveChatId}");
-                    string nextPageToken = null;
-
-                    LiveChatMessagesResource.ListRequest liveChatRequest = Youtube.LiveChatMessages.List(liveChatId, "snippet,authorDetails");
-
-                    bool fastflg = false;
-
-                    while (true)
-                    {
-                        liveChatRequest.PageToken = nextPageToken;
-
-                        var task = liveChatRequest.ExecuteAsync();
-                        task.Wait(_TokenSource.Token);
-                        var liveChatResponse = task.Result;
-
-                        // 途中起動を考慮して初回の読み込みコメントは無視
-                        if (fastflg == true)
-                        {
-
-                            foreach (var liveChat in liveChatResponse.Items)
-                            {
-                                _logger.Info($"コメント：{liveChat.Snippet.DisplayMessage},{liveChat.AuthorDetails.DisplayName}");
-                                // コメントを出力
-                                PushText(liveChat.Snippet.DisplayMessage);
-                            }
-
-                        }else
-                        {
-                            fastflg = true; 
-                        }
-
-                        System.Threading.Thread.Sleep((int)liveChatResponse.PollingIntervalMillis);
-                        nextPageToken = liveChatResponse.NextPageToken;
-                    }
-                }
-            }catch(OperationCanceledException /*ex*/)
-            {
-                _logger.Info($"Youtubes監視スレッドで終了要求検知 {0} ");
-
-            }
-            catch (Exception ex)
-            {
-           
-                _logger.Error($"Youtubes監視スレッドで例外　{ex.Message}");
-            }
-
-
-        }
-
-        /// <summary>
-        /// YouTubeのVideoIDからチャットIDに変換する。
-        /// </summary>
-        /// <param name="videoId">VideoID文字列</param>
-        /// <param name="youtubeService">YouTubeサービスインスタンス</param>
-        /// <returns></returns>
-        static private string GetliveChatID(string videoId, YouTubeService youtubeService)
-        {
-            string ret = null;
-            //引数で取得したい情報を指定
-            var videosList = youtubeService.Videos.List("LiveStreamingDetails");
-            videosList.Id = videoId;
-
-            //動画情報の取得
-            var videoListResponse = videosList.Execute();
-            //LiveChatIDを返す
-            foreach (var videoID in videoListResponse.Items)
-            {
-                ret=  videoID.LiveStreamingDetails.ActiveLiveChatId;
-            }
-            //動画情報取得できない場合はnullを返す
-            return ret;
-        }
 
     }
 }
