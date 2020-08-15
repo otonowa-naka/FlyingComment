@@ -29,11 +29,12 @@ namespace FlyingComment
             private set;
         }
         = null;
-        public YoutubeConnectEntiy YouTubeConnect
+
+        public CommentQueueEntity CommentQueue
         {
             get;
             private set;
-        }= null;
+        } = null;
 
         public WindowsPositionEntiy SettingWindowPosition
         {
@@ -41,7 +42,16 @@ namespace FlyingComment
             private set;
         } = null;
 
-
+        public DelegateTaskEntity CommentMonitorTask
+        {
+            get;
+            private set;
+        } = null;
+        public YoutubeConnectEntiy YouTubeConnect
+        {
+            get;
+            private set;
+        } = null;
         /// <summary>
         /// メイン関数
         /// </summary>
@@ -54,10 +64,14 @@ namespace FlyingComment
 
                 app.CommentStyle = PropertyXMLRepository.LoadCommentStyleEntity();
                 app.CommentWindowConfiguration = PropertyXMLRepository.LoadCommentWindowConfigurationEntity();
-                app.YouTubeConnect = PropertyXMLRepository.LoadYoutubeConnectEntiy();
                 app.SettingWindowPosition = PropertyXMLRepository.LoadSettingWindowPositionEntiy();
+                app.CommentQueue = new CommentQueueEntity();
+                app.CommentMonitorTask = new DelegateTaskEntity();
+                app.YouTubeConnect = PropertyXMLRepository.LoadYoutubeConnectEntiy();
+               
 
                 app.InitializeComponent();
+                app.CreateFlyingCommentWindow();
                 app.Run();
 
                 PropertyXMLRepository.Save(app.CommentStyle, app.CommentWindowConfiguration, app.YouTubeConnect, app.SettingWindowPosition);
@@ -74,25 +88,26 @@ namespace FlyingComment
         /// <summary>
         /// 
         /// </summary>
-        private static MainWindow FlyingCommentWindow = null;
+        private static FlyingCommentsWindow FlyingCommentWindow = null;
 
         /// <summary>
         /// 
         /// </summary>
-        public void CreateFlyingCommentWindow(object context)
+        public void CreateFlyingCommentWindow()
         {
             if(FlyingCommentWindow != null)
             {
                 CloseFlyingCommentWindow();
             }
-            FlyingCommentWindow = new FlyingComment.MainWindow();
-            FlyingCommentWindow.DataContext = context;
+
+
+            FlyingCommentWindow = new FlyingCommentsWindow(new FlyingCommentsViewModel(CommentWindowConfiguration, CommentQueue));
             FlyingCommentWindow.Show();
         }
 
         public void CloseFlyingCommentWindow()
         {
-            FlyingCommentWindow.Close();
+            FlyingCommentWindow.ManualColse();
             FlyingCommentWindow = null;
         }
 

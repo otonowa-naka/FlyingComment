@@ -36,7 +36,7 @@ namespace FlyingComment.Model
             {
                 _TextList.Add(addText);
             }
-            OnPropertyChanged("TextListCount");
+            OnPropertyChanged("Count");
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace FlyingComment.Model
                 {
                     ret = _TextList[0];
                     _TextList.RemoveAt(0);
-                    OnPropertyChanged("TextListCount");
+                    OnPropertyChanged("Count");
 
                 }
             }

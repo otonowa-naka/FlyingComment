@@ -24,18 +24,12 @@ namespace FlyingComment
             InitializeComponent();
 
             App ap= Application.Current as App;
-
-            DataContext = new MainWindowViewModel(ap.CommentStyle, ap.CommentWindowConfiguration, ap.YouTubeConnect, ap.SettingWindowPosition);
-            MainWindowViewModel model = DataContext as MainWindowViewModel;
+            MainWindowViewModel Viewmodel =  new MainWindowViewModel(ap.CommentStyle, ap.CommentWindowConfiguration, ap.SettingWindowPosition, ap.CommentQueue, ap.CommentMonitorTask, ap.YouTubeConnect);
+            DataContext = Viewmodel;
 
             //　ウインドウの位置とサイズを指定
-            model.SettingWindowPosition.MoveWindow(this);
-         
-            //コメントウインドウを作成
-            FlyingCommentsWindow newWnd = new FlyingCommentsWindow(DataContext as MainWindowViewModel);
-            newWnd.Show();
-
-
+            Viewmodel.SettingWindowPosition.MoveWindow(this);
+        
             // フォント選択コンボBoxにシステムのフォント一覧を設定
             m_FontName.ItemsSource = Fonts.SystemFontFamilies;
             

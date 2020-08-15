@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Collections;
 using FlyingComment.Repository;
+using FlyingComment.Service;
 
 namespace FlyingComment.ViewModel
 {
@@ -18,10 +19,12 @@ namespace FlyingComment.ViewModel
 
     public class MainWindowViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
-        private CommentStyleEntity _CommentStyle = null;
-        private CommentWindowConfigurationEntity _CommentWnd = null;
-        private YoutubeConnectEntiy _YouTubeConnect = null;
+        private CommentStyleEntity CommentStyle { set; get; } = null;
+        private CommentWindowConfigurationEntity CommentWnd { set; get; } = null;
+        private YoutubeConnectEntiy YouTubeConnect { set; get; } = null;
+        private CommentQueueEntity CommentQueue { set; get; } = null;
         public WindowsPositionEntiy SettingWindowPosition { set; get; } = null;
+        public DelegateTaskEntity CommnetMonitor { get; private set; } = null;
 
         /// <summary>
         /// ログインスタンス
@@ -32,21 +35,33 @@ namespace FlyingComment.ViewModel
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public MainWindowViewModel(CommentStyleEntity style, CommentWindowConfigurationEntity commentWnd, YoutubeConnectEntiy youTubeConnect, WindowsPositionEntiy settingWindowPosition)
+        public MainWindowViewModel(
+            CommentStyleEntity style, 
+            CommentWindowConfigurationEntity commentWnd, 
+            WindowsPositionEntiy settingWindowPosition,
+            CommentQueueEntity commentQueue,
+            DelegateTaskEntity commnetMonitor,
+            YoutubeConnectEntiy youTubeConnect
+            )
         {
             // APP設定でデータの初期化
             try
             {
-                _CommentStyle = style;
-                _CommentWnd = commentWnd;
-                _YouTubeConnect = youTubeConnect;
+                CommentStyle = style;
+                CommentWnd = commentWnd;
                 SettingWindowPosition = settingWindowPosition;
+                CommentQueue = commentQueue;
+                CommnetMonitor = commnetMonitor;
+                YouTubeConnect = youTubeConnect;
 
-                _CommentStyle.PropertyChanged += OnPropertyChanged_CommentStyle;
-                _CommentWnd.PropertyChanged += OnPropertyChanged_CommentWnd;
-                _YouTubeConnect.PropertyChanged += OnPropertyChanged_YouTubeConnect;
+                CommentStyle.PropertyChanged += OnPropertyChanged_CommentStyle;
+                CommentWnd.PropertyChanged += OnPropertyChanged_CommentWnd;
+                // SettingWindowPosition    // 画面に表示する項目が無いので変更通知は無し
+                // CommentQueue             // 画面に表示する項目が無いので変更通知は無し
+                CommnetMonitor.PropertyChanged += OnPropertyChanged_CommnetMonitor;
+                YouTubeConnect.PropertyChanged += OnPropertyChanged_YouTubeConnect;
 
-                
+
             }
             catch (Exception ex)
             {
@@ -55,10 +70,6 @@ namespace FlyingComment.ViewModel
             }
         }
 
-
-
-
-
         public IEnumerable GetErrors(string propertyName)
         {
             IEnumerable ret = null;
@@ -66,39 +77,37 @@ namespace FlyingComment.ViewModel
 
             if (propertyName == nameof(CommentStyle_FamilyString))
             {
-                errmsg = _CommentStyle.FamilyStringErrorMessage;
+                errmsg = CommentStyle.FamilyStringErrorMessage;
             }
             else
             if (propertyName == nameof(CommentStyle_SizeString))
             {
-                errmsg = _CommentStyle.SizeStringErrorMessage;
+                errmsg = CommentStyle.SizeStringErrorMessage;
             }
             else
             if (propertyName == nameof(CommentStyle_ColorString))
             {
-                errmsg = _CommentStyle.ColorStringErrorMessage;
+                errmsg = CommentStyle.ColorStringErrorMessage;
             }
             else
             if (propertyName == nameof(CommentStyle_ThicknessColorString))
             {
-                errmsg = _CommentStyle.ThicknessColorStringErrorMessage;
+                errmsg = CommentStyle.ThicknessColorStringErrorMessage;
             }
             else
             if (propertyName == nameof(CommentStyle_ThicknessString))
             {
-                errmsg = _CommentStyle.ThicknessStringErrorMessage;
+                errmsg = CommentStyle.ThicknessStringErrorMessage;
             }
             else
             if (propertyName == nameof(CommentWnd_BackColor))
             {
-                errmsg = _CommentWnd.BackColor.ColorStringErrorMessage;
+                errmsg = CommentWnd.BackColor.ColorStringErrorMessage;
             }
             if (errmsg != null)
             {
                 ret = new List<string> { errmsg };
             }
-
-
 
             return ret;
         }
@@ -111,7 +120,8 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.IsError() || _CommentWnd.IsError();
+                //　TODO　YouTubeのエラーチェック
+                return CommentStyle.IsError() || CommentWnd.IsError();
             }
         }
 
@@ -124,8 +134,8 @@ namespace FlyingComment.ViewModel
                 throw new ArgumentException("proarg is null");
             }
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CommentStyle_" + arg.PropertyName));
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("CommentStyle_" + arg.PropertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CommentStyle) + "_" + arg.PropertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(CommentStyle) + "_" + arg.PropertyName));
 
         }
         private void OnPropertyChanged_CommentWnd(object sender, PropertyChangedEventArgs arg)
@@ -135,8 +145,8 @@ namespace FlyingComment.ViewModel
                 throw new ArgumentException("proarg is null");
             }
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CommentWnd_" + arg.PropertyName));
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("CommentWnd_" + arg.PropertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CommentWnd) + "_" + arg.PropertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(CommentWnd) + "_" + arg.PropertyName));
 
         }
         private void OnPropertyChanged_YouTubeConnect(object sender, PropertyChangedEventArgs arg)
@@ -146,30 +156,28 @@ namespace FlyingComment.ViewModel
                 throw new ArgumentException("proarg is null");
             }
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("YouTubeConnect_" + arg.PropertyName));
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs("YouTubeConnect_" + arg.PropertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(YouTubeConnect) + "_" + arg.PropertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(YouTubeConnect) + "_" + arg.PropertyName));
 
         }
 
+        private void OnPropertyChanged_CommnetMonitor(object sender, PropertyChangedEventArgs arg)
+        {
+            if (arg == null)
+            {
+                throw new ArgumentException("proarg is null");
+            }
 
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CommnetMonitor) + "_" + arg.PropertyName));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(CommnetMonitor) + "_" + arg.PropertyName));
+
+        }
  
 
         /// <summary>
         /// プロパティ変更イベントハンドラ
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// プロパティの更新通知を発行します。
-        /// </summary>
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
 
 
  
@@ -181,11 +189,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.FamilyString;
+                return CommentStyle.FamilyString;
             }
             set
             {
-                _CommentStyle.FamilyString = value;
+                CommentStyle.FamilyString = value;
 
             }
         }
@@ -198,11 +206,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.SizeString;
+                return CommentStyle.SizeString;
             }
             set
             {
-                _CommentStyle.SizeString = value;
+                CommentStyle.SizeString = value;
 
             }
         }
@@ -215,11 +223,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.Italic;
+                return CommentStyle.Italic;
             }
             set
             {
-                _CommentStyle.Italic = value;
+                CommentStyle.Italic = value;
 
             }
         }
@@ -231,11 +239,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.Bald;
+                return CommentStyle.Bald;
             }
             set
             {
-                _CommentStyle.Bald = value;
+                CommentStyle.Bald = value;
             }
         }
 
@@ -246,11 +254,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.ColorString;
+                return CommentStyle.ColorString;
             }
             set
             {
-                _CommentStyle.ColorString = value;
+                CommentStyle.ColorString = value;
             }
         }
 
@@ -261,11 +269,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.ThicknessColorString;
+                return CommentStyle.ThicknessColorString;
             }
             set
             {
-                _CommentStyle.ThicknessColorString = value;
+                CommentStyle.ThicknessColorString = value;
             }
         }
 
@@ -276,11 +284,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.ThicknessString;
+                return CommentStyle.ThicknessString;
             }
             set
             {
-                _CommentStyle.ThicknessString = value;
+                CommentStyle.ThicknessString = value;
             }
         }
 
@@ -291,11 +299,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentStyle.CommentTimeString;
+                return CommentStyle.CommentTimeString;
             }
             set
             {
-                _CommentStyle.CommentTimeString = value;
+                CommentStyle.CommentTimeString = value;
             }
         }
         #endregion
@@ -310,11 +318,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentWnd.Stealth;
+                return CommentWnd.Stealth;
             }
             set
             {
-                _CommentWnd.Stealth = value;
+                CommentWnd.Stealth = value;
             }
         } 
 
@@ -325,12 +333,12 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentWnd.Visible;
+                return CommentWnd.Visible;
             }
             set
             {
 
-                _CommentWnd.Visible = value;
+                CommentWnd.Visible = value;
             }
         }
 
@@ -341,12 +349,12 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentWnd.TopMost;
+                return CommentWnd.TopMost;
             }
             set
             {
 
-                _CommentWnd.TopMost = value;
+                CommentWnd.TopMost = value;
             }
         }
 
@@ -357,11 +365,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentWnd.BackColor.ValueString;
+                return CommentWnd.BackColor.ValueString;
             }
             set
             {
-                _CommentWnd.BackColor =  new ColorString(value);
+                CommentWnd.BackColor =  new ColorString(value);
             }
         }
 
@@ -372,35 +380,35 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _CommentWnd.Position;
+                return CommentWnd.Position;
             }
             set
             {
-                _CommentWnd.Position = value;
+                CommentWnd.Position = value;
             }
         }
 
 
 
-        /// <summary>
-        /// コメントウィンドウの状態
-        /// </summary>
-        private WindowState _CommentWndStste = WindowState.Normal;
-        public WindowState CommentWndStste
-        {
-            get
-            {
-                return _CommentWndStste;
-            }
-            set
-            {
-                PropertyChangedIfSet(ref _CommentWndStste, value);
-            }
-        }
+        ///// <summary>
+        ///// コメントウィンドウの状態
+        ///// </summary>
+        //private WindowState _CommentWndStste = WindowState.Normal;
+        //public WindowState CommentWndStste
+        //{
+        //    get
+        //    {
+        //        return _CommentWndStste;
+        //    }
+        //    set
+        //    {
+        //        PropertyChangedIfSet(ref _CommentWndStste, value);
+        //    }
+        //}
         #endregion
 
 
-        #region _YouTubeConnect プロパティ
+        #region YouTubeConnect プロパティ
         /// <summary>
         /// YouTubeAPIKey
         /// </summary>
@@ -408,11 +416,11 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _YouTubeConnect.ApiKey;
+                return YouTubeConnect.ApiKey;
             }
             set
             {
-                _YouTubeConnect.ApiKey = value;
+                YouTubeConnect.ApiKey = value;
             }
         }
 
@@ -423,43 +431,39 @@ namespace FlyingComment.ViewModel
         {
             get
             {
-                return _YouTubeConnect.VideoID;
+                return YouTubeConnect.VideoID;
             }
             set
             {
-                _YouTubeConnect.VideoID = value;
+                YouTubeConnect.VideoID = value;
             }
         }
+
         #endregion
 
-
- 
-
-
-        /// <summary>
-        /// 前と値が違うなら変更してイベントを発行する
-        /// </summary>
-        /// <typeparam name="TResult">プロパティの型</typeparam>
-        /// <param name="source">元の値</param>
-        /// <param name="value">新しい値</param>
-        /// <param name="propertyName">プロパティ名/param>
-        /// <returns>値の変更有無</returns>
-        private bool PropertyChangedIfSet<TResult>(ref TResult source, TResult value, [CallerMemberName]string propertyName = null)
+        public bool CommnetMonitor_IsTaskRunning
         {
-            bool ret = false;
-            //値が同じだったら何もしない
-            if (EqualityComparer<TResult>.Default.Equals(source, value) == false)
+            get
             {
-                source = value;
-                //イベント発行
-                NotifyPropertyChanged(propertyName);
-                ret = true;
+                return CommnetMonitor.IsRunning;
             }
-
-            return ret;
+            private set
+            {
+                // 処理無し
+            }
         }
 
- 
+
+        
+
+        private void StartYouTube()
+        {
+            if( CommnetMonitor.IsRunning == false)
+            {
+                YoutubeCommentPollingService monitor = new YoutubeCommentPollingService(YouTubeConnect, CommentQueue);
+                CommnetMonitor.Run(monitor.CommentMonitorTask, null);
+            }
+}
 
     }
 }

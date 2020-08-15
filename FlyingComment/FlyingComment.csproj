@@ -104,6 +104,7 @@
     <Compile Include="Model\ColorString.cs" />
     <Compile Include="Model\CommentQueueEntity.cs" />
     <Compile Include="Model\CommentWindowConfigurationEntity.cs" />
+    <Compile Include="Model\DelegateTaskEntity.cs" />
     <Compile Include="Model\WindowsPositionEntiy..cs" />
     <Compile Include="Model\YoutubeConnectEntiy.cs" />
     <Compile Include="Repository\PropertyXMLRepository.cs" />

@@ -81,14 +81,14 @@
         <TextBox x:Name="m_FontColor" Grid.Column="1" Grid.Row="6" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_ColorString}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
 
         <TextBlock  Grid.Column="0" Grid.Row="7"  Text="コメント滞在時間(ミリ秒)"  VerticalAlignment="Center" ></TextBlock>
-        <TextBox x:Name="m_CommentTime" Grid.Column="1" Grid.Row="7" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_CommentTime}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
+        <TextBox x:Name="m_CommentTime" Grid.Column="1" Grid.Row="7" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentStyle_CommentTimeString}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="8"  Text="Window 背景色"  VerticalAlignment="Center" ></TextBlock>
         <TextBox x:Name="m_BackColor" Grid.Column="1" Grid.Row="8" Margin="10" TextWrapping="Wrap" Text="{Binding Path=CommentWnd_BackColor,UpdateSourceTrigger=PropertyChanged}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" />
 
 
         <TextBlock  Grid.Column="0" Grid.Row="9"  Text="Windowを最善面にする"  VerticalAlignment="Center" ></TextBlock>
-        <CheckBox x:Name="m_WindowStealthButton" Grid.Column="1" Grid.Row="9"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=CommentWnd_Topmost}"  />
+        <CheckBox x:Name="m_WindowStealthButton" Grid.Column="1" Grid.Row="9"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=CommentWnd_TopMost}"  />
 
         <TextBlock  Grid.Column="0" Grid.Row="10"  Text="Windowを透明にする"  VerticalAlignment="Center" ></TextBlock>
         <CheckBox x:Name="m_TopmosthButton" Grid.Column="1" Grid.Row="10"  Margin="10"  VerticalAlignment="Center" IsChecked="{Binding Path=CommentWnd_Stealth}"  />
@@ -110,7 +110,7 @@
         <TextBox x:Name="m_VideoID" Grid.Column="1" Grid.Row="15" Margin="10" TextWrapping="Wrap" Text="{Binding Path=YouTubeConnect_VideoID}"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="17"  Text="実行"  VerticalAlignment="Center" ></TextBlock>
-        <Button x:Name="button" Grid.Column="1" Grid.Row="17"  Margin="10" Content="{Binding Path=IsTaskRunning, Converter={StaticResource YouTubeRunButtonConverter}}"  Click="RunYouTbbe_Click"/>
+        <Button x:Name="button" Grid.Column="1" Grid.Row="17"  Margin="10" Content="{Binding Path=CommnetMonitor_IsTaskRunning, Converter={StaticResource YouTubeRunButtonConverter}}"  Click="RunYouTbbe_Click"/>
 
     </Grid>
 </Window>

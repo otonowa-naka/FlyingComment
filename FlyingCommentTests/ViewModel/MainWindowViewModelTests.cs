@@ -21,7 +21,7 @@ namespace FlyingComment.ViewModel.Tests
         [TestInitialize]
         public void setup()
         {
-            MainViewModel = new MainWindowViewModel(new CommentStyleEntity(), new CommentWindowConfigurationEntity(), new YoutubeConnectEntiy(), new WindowsPositionEntiy() );
+            MainViewModel = new MainWindowViewModel(new CommentStyleEntity(), new CommentWindowConfigurationEntity(), new WindowsPositionEntiy(), new CommentQueueEntity(), new DelegateTaskEntity(), new YoutubeConnectEntiy());
             MainViewModel.PropertyChanged += (send, arg) =>
             {
                 PropertyChangedEventArgs proarg = arg as PropertyChangedEventArgs;

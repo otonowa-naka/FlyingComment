@@ -8,7 +8,7 @@
         x:Name="m_FlyingCommentWnd"
         Title="コメント表示" 
         WindowStyle="None"
-        Topmost="{Binding Path=Topmost}" 
+        Topmost="{Binding Path=CommentWnd_TopMost}" 
         Closing="Window_Closing" 
         Closed="Window_Closed"
         >
@@ -18,8 +18,8 @@
         <local:ColorStringToBrushConverter x:Key="ColorStringToBrushConverter" />
     </Window.Resources>
 
-    <Canvas x:Name="m_Canvas"    Visibility="{Binding Path=Visible, Converter={StaticResource BoolVisibilityConverter}}"
-        Background="{Binding Path=BackColor, Converter={StaticResource ColorStringToBrushConverter}}">
+    <Canvas x:Name="m_Canvas"    Visibility="{Binding Path=CommentWnd_Visible, Converter={StaticResource BoolVisibilityConverter}}"
+        Background="{Binding Path=CommentWnd_BackColor, Converter={StaticResource ColorStringToBrushConverter}}">
 
     </Canvas>
 </Window>

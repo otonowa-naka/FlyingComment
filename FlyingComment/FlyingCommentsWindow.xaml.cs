@@ -25,28 +25,20 @@ namespace FlyingComment
         /// コンストラクタ
         /// </summary>
         /// <param name="model"></param>
-        public FlyingCommentsWindow(MainWindowViewModel model)
+        public FlyingCommentsWindow(FlyingCommentsViewModel model)
         {
             InitializeComponent();
 
             ///　Model設定
             DataContext = model;
 
-            ///　コメントリストの変更通知を受け取るためにバインディングを設定
-            Binding TextListCountBinding = new Binding("TextListCount");
-            TextListCountBinding.Mode = BindingMode.OneWay;
-            this.SetBinding(TextListCount, TextListCountBinding);
 
-            ///　透明化の変更通知を受け取るためにバインディングを設定
-            Binding StealthBinding = new Binding("Stealth");
-            StealthBinding.Mode = BindingMode.OneWay;
-            this.SetBinding(Stealth, StealthBinding);
 
             //　ウインドウの位置とサイズを設定
-            model.CommentWnd_Position.MoveWindow(this);
+            model.CommentWnd.Position.MoveWindow(this);
             
             ///　透明化の初期状態を設定
-            if (model.CommentWnd_Stealth == true)
+            if (model.CommentWnd.Stealth == true)
             {
                 WindowStyle = WindowStyle.None;
                 AllowsTransparency = true;
@@ -59,32 +51,44 @@ namespace FlyingComment
                 
             }
 
+            // バイディングを設定するとChangeイベントが実行される。
+            // イベント処理の中でWindowStyleの設定値と比較処理をしているので、
+            // WindowStyle後にしないと無限ループになる。
+            // コメントリストの変更通知を受け取るためにバインディングを設定
+            Binding CommentQueue_CountBinding = new Binding("CommentQueue_Count");
+            CommentQueue_CountBinding.Mode = BindingMode.OneWay;
+            this.SetBinding(CommentQueue_Count, CommentQueue_CountBinding);
+
+            ///　透明化の変更通知を受け取るためにバインディングを設定
+            Binding StealthBinding = new Binding("CommentWnd_Stealth");
+            StealthBinding.Mode = BindingMode.OneWay;
+            this.SetBinding(Stealth, StealthBinding);
         }
 
 
         /// <summary>
         /// 飛ばすココメントリストの数が変わったことを受け取る為のプロパティを定義
         /// </summary>
-        public static readonly DependencyProperty TextListCount =
+        public static readonly DependencyProperty CommentQueue_Count =
             DependencyProperty.Register(
-            "TextListCount",                     // プロパティ名
-            typeof(int),                         //　プロパティの型情報
+            "CommentQueue_Count",                     // プロパティ名
+            typeof(CommentTextEntiy),                         //　プロパティの型情報
             typeof(FlyingCommentsWindow),
                 new PropertyMetadata(
-                0,                               // デフォルト値の設定
-                TextListCountPropertyChanged)    // 変更のイベントハンドラ定義
+                new CommentTextEntiy("", new CommentStyleEntity()),                               // デフォルト値の設定
+                CommentQueue_CountPropertyChanged)    // 変更のイベントハンドラ定義
             );
 
         /// <summary>
-        /// TextListCountの変更イベントハンドラ
+        /// CommentQueue_Countの変更イベントハンドラ
         /// </summary>
-        /// <param name="ｄOjd"></param>
+        /// <param name="dobj"></param>
         /// <param name="eArgs"></param>
-        private static void TextListCountPropertyChanged(DependencyObject ｄOjd, DependencyPropertyChangedEventArgs eArgs)
+        private static void CommentQueue_CountPropertyChanged(DependencyObject dobj, DependencyPropertyChangedEventArgs eArgs)
         {
             try
             {
-                FlyingCommentsWindow wnd = ｄOjd as FlyingCommentsWindow;
+                FlyingCommentsWindow wnd = dobj as FlyingCommentsWindow;
                
                 //　コメントを飛ばす処理を実行
                 wnd?.FlyingComment();
@@ -102,24 +106,24 @@ namespace FlyingComment
         /// </summary>
         public static readonly DependencyProperty Stealth =
             DependencyProperty.Register(
-            "Stealth",                       // プロパティ名
-            typeof(bool),                    //　プロパティの型情報
+            "CommentWnd_Stealth",                // プロパティ名
+            typeof(bool),                        //　プロパティの型情報
             typeof(FlyingCommentsWindow),
                 new PropertyMetadata(
-                false,                       // デフォルト値の設定
-                StealthPropertyChanged)    　// 変更のイベントハンドラ定義
+                false,                           // デフォルト値の設定
+                StealthPropertyChanged)    　    // 変更のイベントハンドラ定義
             );
 
         /// <summary>
         /// ウインドウの透明化フラグの変更イベントハンドラ
         /// </summary>
-        /// <param name="ｄOjd"></param>
+        /// <param name="dobj"></param>
         /// <param name="eArgs"></param>
-        private static void StealthPropertyChanged(DependencyObject ｄOjd, DependencyPropertyChangedEventArgs eArgs)
+        private static void StealthPropertyChanged(DependencyObject dobj, DependencyPropertyChangedEventArgs eArgs)
         {
             try
             {
-                FlyingCommentsWindow wnd = ｄOjd as FlyingCommentsWindow;
+                FlyingCommentsWindow wnd = dobj as FlyingCommentsWindow;
 
                 //　コメントウィンドウの再作成
                 wnd.RenewWindow();
@@ -130,7 +134,6 @@ namespace FlyingComment
                 _logger.Error($"ウインドウの透明化フラグの変更イベントハンドラで例外　{ex.Message}");
             }
         }
-
         /// <summary>
         /// 透明化の為にウインドウの再作成
         /// ※　WindowStyleの変更はShowをする前にしか変更できないため
@@ -138,13 +141,13 @@ namespace FlyingComment
         private void RenewWindow()
         {
 
-            MainWindowViewModel model = DataContext as MainWindowViewModel;
+            FlyingCommentsViewModel model = DataContext as FlyingCommentsViewModel;
             if (model != null)
             {
                 //　現在の状態と透明化フラグの状態に差異があるか確認
                 if (
-                    (model.CommentWnd_Stealth == true && WindowStyle == WindowStyle.None) ||
-                    (model.CommentWnd_Stealth == false && WindowStyle == WindowStyle.SingleBorderWindow)
+                    (model.CommentWnd.Stealth == true && WindowStyle == WindowStyle.None) ||
+                    (model.CommentWnd.Stealth == false && WindowStyle == WindowStyle.SingleBorderWindow)
 
                     )
                 {
@@ -156,28 +159,11 @@ namespace FlyingComment
 
                     // 透明化の状態と現在のWindowの状態が異なる時
 
-                    //　新しいWindowを作成して、自身のModelを渡す。
-                    FlyingCommentsWindow newWind = new FlyingCommentsWindow(DataContext as MainWindowViewModel);
+                    //　現在の位置とサイズをモデルに保存
+                    model.CommentWnd.Position = new Model.WindowsPositionEntiy(this);
 
-                    //　位置とサイズをコピー
-                    newWind.Top = Top;
-                    newWind.Left = Left;
-                    newWind.Width = Width;
-                    newWind.Height = Height;
-                    newWind.WindowState = WindowState;
-
-                    //newWind.DataContext = DataContext;
-                    //newWind.Owner = Owner;
-                    
-                    //　旧ウィンドウを閉じる
-                    ManualColse();
-
-                    //　旧ウィンドウとモデルを切断
-                    DataContext = null;
-
-                    //　新ウィンドウを表示する
-                    newWind.Show();
-
+                    App ap = Application.Current as App;
+                    ap.CreateFlyingCommentWindow();                   
                 }
 
             }
@@ -198,70 +184,37 @@ namespace FlyingComment
         /// </summary>
         private void FlyingComment()
         {
-            MainWindowViewModel model = DataContext as MainWindowViewModel;
+            FlyingCommentsViewModel model = DataContext as FlyingCommentsViewModel;
 
             if (model != null)
             {
-                string flytext = "";// model.PopText();
-                if(string.IsNullOrEmpty(flytext) == false)
+                CommentTextEntiy comment = model.PopComment;
+                while(comment != null)
                 {
                     //　コメントのテキストコントロール
                     OutlineTextControl CommentBlock = new OutlineTextControl();
                     
                     // 表示文字設定
-                    CommentBlock.Text = flytext;
+                    CommentBlock.Text = comment.Comment;
                     // フォント設定
-//                    CommentBlock.Font = new FontFamily(model.FontName); ;
+                    CommentBlock.Font = comment.Style.Family;
                     // ボールド設定
-//                    CommentBlock.Bold = model.FontBald;
+                    CommentBlock.Bold = comment.Style.Bald;
                     //　イタリック設定
-//                    CommentBlock.Italic = model.FontItalic;
+                    CommentBlock.Italic = comment.Style.Italic;
 
                     //　フォントサイズ設定
-                    try
-                    {
-                        //FontSizeConverter myFontSizeConverter = new FontSizeConverter();
-                        //CommentBlock.FontSize = (Double)myFontSizeConverter.ConvertFromString(model.FontSize);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"フォントサイズ変換に失敗{ ex.Message}");
-                    }
-                    
+                    CommentBlock.FontSize = comment.Style.Size;
+
                     //　文字色設定
-                    ColorConverter ColorConv = new ColorConverter();
-                    try
-                    {
-                    //    Color col = (Color)ColorConv.ConvertFrom(model.FontColor);
-                    //    CommentBlock.Fill = new SolidColorBrush(col);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"文字色変換に失敗{ ex.Message}");
-                    }
+                    CommentBlock.Fill = new SolidColorBrush(comment.Style.Color);
 
                     // テキストの枠線の色
-                    try
-                    {
-                        //Color col = (Color)ColorConv.ConvertFrom(model.FontThicknessColor);
-                        //CommentBlock.Stroke = new SolidColorBrush(col);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"文字の縁色変換に失敗{ ex.Message}");
-                    }
+                    CommentBlock.Stroke = new SolidColorBrush(comment.Style.ThicknessColor);
 
                     // テキストの枠の太さ
-                    try
-                    {
-                        //ushort thic = 0;
-                        //ushort.TryParse(model.FontThickness, out thic);
-                        //CommentBlock.StrokeThickness = thic;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Error($"文字の縁の太さ変換に失敗{ ex.Message}");
-                    }
+                    CommentBlock.StrokeThickness = comment.Style.Thickness;
+
 
                     try
                     {
@@ -297,18 +250,7 @@ namespace FlyingComment
                         myDoubleAnimation.To = 0 - CommentBlock.FormattedTextWidth;
 
                         // コメント滞在時間
-                        try
-                        {
-                            long time = 0;
-                            long.TryParse(model.CommentStyle_CommentTimeString, out time);
-                            myDoubleAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(time));
-
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.Error($"コメント滞在時間の変換に失敗{ ex.Message}");
-                            throw;
-                        }
+                        myDoubleAnimation.Duration = new Duration(TimeSpan.FromMilliseconds(comment.Style.CommentTime));
 
                         // 繰り返しを無しに設定
                         myDoubleAnimation.AutoReverse = false;
@@ -328,7 +270,7 @@ namespace FlyingComment
                         _logger.Error($"コメントコントロールの作成に失敗{ ex.Message}");
                     }
 
-
+                    comment = model.PopComment;
                 }
 
             }
@@ -359,7 +301,7 @@ namespace FlyingComment
         /// <summary>
         /// ウィンドウの閉じる。（アプリケーションを終了させない）
         /// </summary>
-        private void ManualColse()
+        public void ManualColse()
         {
             _ManualColse = true;
             Close();

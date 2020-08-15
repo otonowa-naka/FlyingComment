@@ -10,21 +10,13 @@ using System.Threading.Tasks;
 
 namespace FlyingComment.Service
 {
-    class YoutubeCommentPollingService: IDisposable
+    class YoutubeCommentPollingService
     {
         /// <summary>
         /// ログインスタンス
         /// </summary>
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        /// <summary>
-        /// 排他用ロックオプジェクト
-        /// </summary>
-        private object _LockObject = new object();
 
-        /// <summary>
-        /// コメント取得スレッド
-        /// </summary>
-        private Task _Task = null;
         /// <summary>
         /// コメント取得スレッドCancelトークン
         /// </summary>
@@ -40,135 +32,16 @@ namespace FlyingComment.Service
         }
 
         /// <summary>
-        /// デストラクタ
-        /// </summary>
-        ~YoutubeCommentPollingService()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                ClearTask();
-            }
-
-        }
-
-        /// <summary>
-        ///　コメント取得スレッド状態取得
-        /// </summary>
-        public bool IsTaskRunning
-        {
-            get
-            {
-                bool ret = false;
-                lock (_LockObject)
-                {
-                    if (_Task != null)
-                    {
-                        // Completedでなければ実行中状態
-                        ret = (_Task.IsCompleted == false);
-                    }
-                }
-                return ret;
-            }
-        }
-
-        /// <summary>
-        /// YouTube　コメント開始/終了処理
-        /// </summary>
-        public void RunYouTube()
-        {
-            try
-            {
-                //　現行の起動状態を確認
-                if (IsTaskRunning == false)
-                {
-                    //　実行済みの可能性もあるのでTaskをクリアする
-                    ClearTask();
-
-                    //　ビデオIDが設定されていることを確認する
-                    if (string.IsNullOrEmpty(_ConnectParameter.VideoID) == false)
-                    {
-
-                        string VideoId = _ConnectParameter.VideoID;
-                        _TokenSource = new CancellationTokenSource();
-
-                        //スレッド内で通信を実行
-                        _Task = Task.Run(() =>
-                        {
-                            CommentMonitorTask(VideoId);
-
-                            // スレッドが終了したことを伝えるために
-                      //      NotifyPropertyChanged(nameof(IsTaskRunning));
-                        }
-                        );
-
-                        //スレッドが終了するので変更通知を実行
-                       // NotifyPropertyChanged(nameof(IsTaskRunning));
-
-                    }
-                }
-                else
-                {
-                    ClearTask();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"コメント取得実行で例外 例外メッセージ={ex.Message}");
-
-            }
-        }
-
-
-
-        /// <summary>
-        /// タスクを終了させてNULL化
-        /// </summary>
-        private void ClearTask()
-        {
-            try
-            {
-                if (_Task != null)
-                {
-                    _TokenSource.Cancel();
-                    _Task.Wait();
-
-                    _Task.Dispose();
-                    _TokenSource.Dispose();
-
-                    _TokenSource = null;
-                    _Task = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"タスクキャンセル実行で例外メッセージ={ex.Message}");
-                throw;
-            }
-        }
-
-
-
-
-        /// <summary>
         /// Youtubeのチャット監視スレッドメイン処理
         /// </summary>
         /// <param name="videoId"></param>
-        private void CommentMonitorTask(string videoId)
+        public Action CommentMonitorTask(object aArg, CancellationToken token)
         {
             try
             {
+
+                string videoId = _ConnectParameter.VideoID;
+
                 _logger.Info($"Youtubes監視スレッド実行開始 API={_ConnectParameter.ApiKey}, Video={videoId}");
 
                 using (YouTubeService Youtube = new YouTubeService(new BaseClientService.Initializer() { ApiKey = _ConnectParameter.ApiKey }))
@@ -198,7 +71,8 @@ namespace FlyingComment.Service
                             {
                                 _logger.Info($"コメント：{liveChat.Snippet.DisplayMessage},{liveChat.AuthorDetails.DisplayName}");
                                 // コメントを出力
-                                _CommentQueue.PushText(liveChat.Snippet.DisplayMessage);
+                                // TODO　フォントの設定が必要
+                                _CommentQueue.PushText(new CommentTextEntiy( liveChat.Snippet.DisplayMessage, new CommentStyleEntity()));
                             }
 
                         }
@@ -223,6 +97,7 @@ namespace FlyingComment.Service
                 _logger.Error($"Youtubes監視スレッドで例外　{ex.Message}");
             }
 
+            return null;
 
         }
 
