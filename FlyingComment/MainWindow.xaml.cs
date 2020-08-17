@@ -65,21 +65,6 @@ namespace FlyingComment
             //model?.RunYouTube();
         }
 
-
-        /// <summary>
-        /// テストコメントを送信
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void m_TestSendButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindowViewModel model = DataContext as MainWindowViewModel;
-          //  model.PushText(m_TestComment.Text);
-        }
-        
-
-
-
     }
 
     /// <summary>

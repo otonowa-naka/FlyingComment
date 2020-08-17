@@ -101,7 +101,7 @@
         <TextBox x:Name="m_TestComment" Grid.Column="1" Grid.Row="12" Margin="10" TextWrapping="Wrap" Text="テストコメント"/>
 
         <TextBlock  Grid.Column="0" Grid.Row="13"  Text="テストコメント表示"  VerticalAlignment="Center" ></TextBlock>
-        <Button x:Name="m_TestSendButton" Grid.Column="1" Grid.Row="13"  Margin="10" Content="テストコメント表示" Click="m_TestSendButton_Click" />
+        <Button x:Name="m_TestSendButton" Grid.Column="1" Grid.Row="13"  Margin="10" Content="テストコメント表示" Command="{Binding TestCommentPushCommand}" CommandParameter="{Binding ElementName=m_TestComment,Path=Text}" />
 
         <TextBlock  Grid.Column="0" Grid.Row="14"  Text="Google API Key"  VerticalAlignment="Center"></TextBlock>
         <TextBox x:Name="m_APIKey" Grid.Column="1" Grid.Row="14" Margin="10" TextWrapping="Wrap" Text="{Binding Path=YouTubeConnect_ApiKey}"/>

@@ -20,6 +20,5 @@
 
     <Canvas x:Name="m_Canvas"    Visibility="{Binding Path=CommentWnd_Visible, Converter={StaticResource BoolVisibilityConverter}}"
         Background="{Binding Path=CommentWnd_BackColor, Converter={StaticResource ColorStringToBrushConverter}}">
-
     </Canvas>
 </Window>

@@ -46,7 +46,9 @@ namespace FlyingComment.ViewModel
                 throw new ArgumentException("proarg is null");
             }
 
-              PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CommentQueue) + "_" + arg.PropertyName));
+            string proname = nameof(CommentQueue) + "_" + arg.PropertyName;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(proname));
 
         }
 
@@ -95,13 +97,16 @@ namespace FlyingComment.ViewModel
                 // 変更しない
             }
         }
-
-        public CommentTextEntiy PopComment
+        public long CommentQueue_Count
         {
             get
             {
-                return CommentQueue.PopText();
+                return CommentQueue.TextListCount;
             }
+        }
+        public CommentTextEntiy PopComment()
+        {
+            return CommentQueue.PopText();
         }
     }
 }

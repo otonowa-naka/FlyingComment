@@ -12,6 +12,7 @@ using System.Windows;
 using System.Collections;
 using FlyingComment.Repository;
 using FlyingComment.Service;
+using System.Windows.Input;
 
 namespace FlyingComment.ViewModel
 {
@@ -70,6 +71,8 @@ namespace FlyingComment.ViewModel
             }
         }
 
+
+        #region INotifyDataErrorInfo実装
         public IEnumerable GetErrors(string propertyName)
         {
             IEnumerable ret = null;
@@ -124,8 +127,13 @@ namespace FlyingComment.ViewModel
                 return CommentStyle.IsError() || CommentWnd.IsError();
             }
         }
+        #endregion
 
-
+        #region INotifyPropertyChanged実装
+        /// <summary>
+        /// プロパティ変更イベントハンドラ
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged_CommentStyle(object sender, PropertyChangedEventArgs arg)
         {
@@ -172,15 +180,10 @@ namespace FlyingComment.ViewModel
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(nameof(CommnetMonitor) + "_" + arg.PropertyName));
 
         }
- 
 
-        /// <summary>
-        /// プロパティ変更イベントハンドラ
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
 
- 
         #region _CommentStyleプロパティ
         /// <summary>
         /// フォント名
@@ -454,7 +457,28 @@ namespace FlyingComment.ViewModel
         }
 
 
-        
+        DelegateCommand _TestCommentPushCommand = null;
+
+        public ICommand TestCommentPushCommand
+        {
+            get
+            {
+                if( _TestCommentPushCommand == null)
+                {
+                    _TestCommentPushCommand = new DelegateCommand(TestCommentPush, null);
+                }
+                return _TestCommentPushCommand;
+            }
+           
+        } 
+
+        private void TestCommentPush(object comment)
+        {
+            string commentStr = comment as string;
+
+            CommentQueue.PushText(new CommentTextEntiy(commentStr, CommentStyle));
+
+        }
 
         private void StartYouTube()
         {

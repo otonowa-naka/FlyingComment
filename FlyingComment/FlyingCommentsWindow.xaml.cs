@@ -55,27 +55,29 @@ namespace FlyingComment
             // イベント処理の中でWindowStyleの設定値と比較処理をしているので、
             // WindowStyle後にしないと無限ループになる。
             // コメントリストの変更通知を受け取るためにバインディングを設定
-            Binding CommentQueue_CountBinding = new Binding("CommentQueue_Count");
-            CommentQueue_CountBinding.Mode = BindingMode.OneWay;
-            this.SetBinding(CommentQueue_Count, CommentQueue_CountBinding);
 
             ///　透明化の変更通知を受け取るためにバインディングを設定
             Binding StealthBinding = new Binding("CommentWnd_Stealth");
             StealthBinding.Mode = BindingMode.OneWay;
             this.SetBinding(Stealth, StealthBinding);
+            Binding CommentQueueBinding = new Binding("CommentQueue_Count");
+            CommentQueueBinding.Mode = BindingMode.OneWay;
+            this.SetBinding(CommentQueueCountEvent, CommentQueueBinding);
+//            this.SetBinding(CommentQueueCountEvent, StealthBinding);
+
         }
 
 
         /// <summary>
         /// 飛ばすココメントリストの数が変わったことを受け取る為のプロパティを定義
         /// </summary>
-        public static readonly DependencyProperty CommentQueue_Count =
+        public static readonly DependencyProperty CommentQueueCountEvent =
             DependencyProperty.Register(
-            "CommentQueue_Count",                     // プロパティ名
-            typeof(CommentTextEntiy),                         //　プロパティの型情報
+            "CommentQueueCountEvent",                     // プロパティ名
+            typeof(int),                         //　プロパティの型情報
             typeof(FlyingCommentsWindow),
                 new PropertyMetadata(
-                new CommentTextEntiy("", new CommentStyleEntity()),                               // デフォルト値の設定
+                0,                               // デフォルト値の設定
                 CommentQueue_CountPropertyChanged)    // 変更のイベントハンドラ定義
             );
 
@@ -106,7 +108,7 @@ namespace FlyingComment
         /// </summary>
         public static readonly DependencyProperty Stealth =
             DependencyProperty.Register(
-            "CommentWnd_Stealth",                // プロパティ名
+            "Stealth",                // プロパティ名
             typeof(bool),                        //　プロパティの型情報
             typeof(FlyingCommentsWindow),
                 new PropertyMetadata(
@@ -188,7 +190,7 @@ namespace FlyingComment
 
             if (model != null)
             {
-                CommentTextEntiy comment = model.PopComment;
+                CommentTextEntiy comment = model.PopComment();
                 while(comment != null)
                 {
                     //　コメントのテキストコントロール
@@ -270,7 +272,7 @@ namespace FlyingComment
                         _logger.Error($"コメントコントロールの作成に失敗{ ex.Message}");
                     }
 
-                    comment = model.PopComment;
+                    comment = model.PopComment();
                 }
 
             }
