@@ -241,7 +241,7 @@ namespace FlyingComment
 
                         //CommentBlock.SetValue(Canvas.LeftProperty, 200.0);
                         CommentBlock.SetValue(Canvas.TopProperty, ypos);
-
+                        
 
                         // アニメーション設定
                         DoubleAnimation myDoubleAnimation = new DoubleAnimation();
@@ -371,19 +371,12 @@ namespace FlyingComment
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-
             Brush ret = null;
-            string coloerString = value as string;
-            //　文字色
-            ColorConverter ColorConv = new ColorConverter();
             try
             {
-                //　透明化フラグが有効の場合は、NULLが返ってくる。
-                if(string.IsNullOrEmpty(coloerString) == false)
-                {
-                    Color col = (Color)ColorConv.ConvertFrom(coloerString);
-                    ret = new SolidColorBrush(col);
-                }
+                //　文字色
+                Color col = (Color)value;
+                ret = new SolidColorBrush(col);
             }
             catch (Exception ex)
             {
