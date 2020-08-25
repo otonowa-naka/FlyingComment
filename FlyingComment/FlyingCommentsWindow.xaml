@@ -17,8 +17,10 @@
         <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter" />
         <local:ColorStringToBrushConverter x:Key="ColorStringToBrushConverter" />
     </Window.Resources>
+    <Border Background="{Binding Path=CommentWnd_BackColor, Converter={StaticResource ColorStringToBrushConverter}}">
+        <Canvas x:Name="m_Canvas"    Visibility="{Binding Path=CommentWnd_Visible, Converter={StaticResource BoolVisibilityConverter}}"
+        >
+        </Canvas>
 
-    <Canvas x:Name="m_Canvas"    Visibility="{Binding Path=CommentWnd_Visible, Converter={StaticResource BoolVisibilityConverter}}"
-        Background="{Binding Path=CommentWnd_BackColor, Converter={StaticResource ColorStringToBrushConverter}}">
-    </Canvas>
+    </Border>
 </Window>

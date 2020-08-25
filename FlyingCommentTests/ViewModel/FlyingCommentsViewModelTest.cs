@@ -44,8 +44,8 @@ namespace FlyingCommentTests.ViewModel
             CommentQueue.PushText(new CommentTextEntiy("追加テキスト", new CommentStyleEntity()));
 
             
-            Assert.AreEqual("追加テキスト", ViewModel.PopComment.Comment);
-            Assert.AreEqual(null, ViewModel.PopComment);
+            Assert.AreEqual("追加テキスト", ViewModel.PopComment().Comment);
+            Assert.AreEqual(null, ViewModel.PopComment());
         }
 
         [TestMethod]

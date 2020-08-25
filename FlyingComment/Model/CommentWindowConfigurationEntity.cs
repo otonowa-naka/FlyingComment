@@ -77,7 +77,17 @@ namespace FlyingComment.Model
         {
             get
             {
-                return _BackColor;
+                ColorString ret = null;
+                if (Stealth == true)
+                {
+                    ret = new ColorString("#00000000");
+                }
+                else
+                {
+                    ret = _BackColor;
+                }
+
+                return ret;
             }
             set
             {
